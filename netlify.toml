@@ -1,0 +1,29 @@
+[build]
+  command = "npm run build && node netlify-build.js"
+  publish = "out"
+
+# Handle all routes with client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Specific redirect for movie detail pages
+[[redirects]]
+  from = "/movies/*"
+  to = "/movies/_fallback.html"
+  status = 200
+
+# Add cache control headers for better performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Enable Netlify Edge Functions
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+# Configure build hooks
+[build.processing]
+  skip_processing = false 
