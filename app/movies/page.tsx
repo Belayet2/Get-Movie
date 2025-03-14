@@ -147,7 +147,8 @@ function MoviesContent() {
   // Handle search input
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setShowRecommendations(e.target.value.trim().length > 0);
+    // Always show recommendations when there's text, even if it's just one character
+    setShowRecommendations(e.target.value.length > 0);
   };
 
   // Handle clicking outside of search and recommendations
@@ -171,11 +172,15 @@ function MoviesContent() {
   // Handle movie selection from recommendations
   const handleSelectMovie = (movie: Movie) => {
     setSearchQuery(movie.title);
-    // Don't hide recommendations after selection
-    // setShowRecommendations(false);
+    setShowRecommendations(false);
 
-    // Auto-select the movie's genres
-    setSelectedGenres(movie.genres);
+    // Navigate to the movie detail page using the slug
+    if (movie.slug) {
+      window.location.href = `/movies/${movie.slug}`;
+    } else {
+      // If no slug is available, just select the genres
+      setSelectedGenres(movie.genres);
+    }
   };
 
   // Initialize with search params if present
@@ -296,18 +301,20 @@ function MoviesContent() {
             </div>
           </div>
 
-          {/* Genre Filter */}
-          <GenreFilter
-            genres={allGenres}
-            selectedGenres={selectedGenres}
-            onSelectGenre={handleGenreSelect}
-            onClearAll={handleClearAllGenres}
-          />
+          {/* Genre Filter - Hide when search recommendations are shown */}
+          {!showRecommendations && (
+            <GenreFilter
+              genres={allGenres}
+              selectedGenres={selectedGenres}
+              onSelectGenre={handleGenreSelect}
+              onClearAll={handleClearAllGenres}
+            />
+          )}
         </div>
 
         {/* Movie Recommendations - Moving to here, above the results count */}
-        {showRecommendations && searchQuery && (
-          <div className="mb-6">
+        {showRecommendations && !isLoading && (
+          <div className="mb-6 transform-gpu transition-all duration-200 ease-in-out">
             <MovieRecommendations
               searchQuery={searchQuery}
               movies={allMovies}

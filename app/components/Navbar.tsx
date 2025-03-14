@@ -101,8 +101,13 @@ export default function Navbar() {
     setIsFocused(false);
     setIsMenuOpen(false);
 
-    // Navigate to the movie page or apply filters
-    router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
+    // Navigate to the movie detail page using the slug
+    if (movie.slug) {
+      router.push(`/movies/${movie.slug}`);
+    } else {
+      // Fallback to search if no slug is available
+      router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
+    }
   };
 
   // If not mounted yet (server-side), render a simpler version
@@ -237,8 +242,8 @@ export default function Navbar() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Search by title, genre, or ID..."
-                    className={`w-72 pl-10 pr-10 py-2 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
+                    placeholder="Search movies..."
+                    className={`w-80 pl-10 pr-10 py-2 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
                       ${
                         isFocused
                           ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
@@ -316,12 +321,14 @@ export default function Navbar() {
                   </div>
 
                   {/* Movie Recommendations */}
-                  {showRecommendations && searchQuery && !isLoading && (
-                    <MovieRecommendations
-                      searchQuery={searchQuery}
-                      movies={movies}
-                      onSelectMovie={handleSelectMovie}
-                    />
+                  {showRecommendations && !isLoading && (
+                    <div className="absolute mt-2 w-[550px] right-0 transform-gpu transition-all duration-200 ease-in-out">
+                      <MovieRecommendations
+                        searchQuery={searchQuery}
+                        movies={movies}
+                        onSelectMovie={handleSelectMovie}
+                      />
+                    </div>
                   )}
                 </div>
               ) : (
@@ -399,6 +406,79 @@ export default function Navbar() {
           className="fixed inset-0 z-50 md:hidden bg-white dark:bg-gray-800 pt-16"
         >
           <div className="container mx-auto px-4 py-4">
+            {/* Mobile Search */}
+            <div className="mb-4 relative" ref={searchInputRef}>
+              <input
+                type="text"
+                placeholder="Search movies..."
+                className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
+                  ${
+                    isFocused
+                      ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
+                      : "border-gray-200 dark:border-gray-700"
+                  }`}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onFocus={() => {
+                  setShowRecommendations(true);
+                  setIsFocused(true);
+                }}
+              />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className={`w-5 h-5 ${
+                    isFocused ? "text-blue-500" : "text-gray-400"
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile Movie Recommendations */}
+              {showRecommendations && !isLoading && (
+                <div className="mt-2 transform-gpu transition-all duration-200 ease-in-out">
+                  <MovieRecommendations
+                    searchQuery={searchQuery}
+                    movies={movies}
+                    onSelectMovie={handleSelectMovie}
+                  />
+                </div>
+              )}
+            </div>
+
             {/* Mobile Navigation Links */}
             <div className="space-y-2">
               <Link
