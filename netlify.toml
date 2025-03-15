@@ -7,12 +7,14 @@
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
 
 # Specific redirect for movie detail pages
 [[redirects]]
   from = "/movies/*"
-  to = "/movies/_fallback.html"
+  to = "/index.html"
   status = 200
+  force = true
 
 # Add cache control headers for better performance
 [[headers]]
