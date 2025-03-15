@@ -1,5 +1,5 @@
 [build]
-  command = "npm run netlify-build:simple"
+  command = "npm run build && node netlify-build.js"
   publish = "out"
 
 # Handle all routes with client-side routing
@@ -7,65 +7,18 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
 
 # Specific redirect for movie detail pages
 [[redirects]]
   from = "/movies/*"
-  to = "/index.html"
+  to = "/movies/_fallback.html"
   status = 200
-  force = true
-
-# Specific redirect for admin routes
-[[redirects]]
-  from = "/admin-*"
-  to = "/index.html"
-  status = 200
-  force = true
 
 # Add cache control headers for better performance
 [[headers]]
   for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
-    X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://www.google-analytics.com https://* http://*; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://firebaseinstallations.googleapis.com https://firebase.googleapis.com https://firestore.googleapis.com"
-    Cross-Origin-Opener-Policy = "same-origin"
-
-# Remove Brotli compression settings as they're causing issues
-# Add standard cache headers instead
-
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "application/javascript"
-
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-    Content-Type = "text/css"
-
-[[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-    Content-Type = "text/html"
-
-# Cache static assets for a year
-[[headers]]
-  for = "/images/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*.woff2"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
 
 # Enable Netlify Edge Functions
 [build.environment]

@@ -9,26 +9,9 @@
     "lint": "next lint",
     "export": "next build",
     "netlify-build": "next build && node netlify-build.js",
-    "netlify-build:optimized": "node scripts/netlify-optimized-build.js",
-    "netlify-build:simple": "node scripts/netlify-simple-build.js",
     "postbuild": "node netlify-build.js",
     "create-deploy-zip": "node create-deploy-zip.js",
-    "check-firebase": "node check-firebase-config.js",
-    "analyze": "node scripts/analyze-bundle.js",
-    "optimize-images": "node scripts/optimize-images.js",
-    "optimize-images:advanced": "node scripts/advanced-image-optimization.js",
-    "generate-responsive-images": "node scripts/generate-responsive-images.js",
-    "minify-html": "node scripts/minify-html.js",
-    "extract-critical-css": "node scripts/extract-critical-css.js",
-    "optimize-js-delivery": "node scripts/optimize-js-delivery.js",
-    "optimize-resource-hints": "node scripts/optimize-resource-hints.js",
-    "compress-assets": "node scripts/compress-assets.js",
-    "build:optimized": "next build && npm run optimize-images:advanced && npm run generate-responsive-images && npm run extract-critical-css && npm run optimize-js-delivery && npm run optimize-resource-hints && npm run minify-html && npm run compress-assets",
-    "build:safe": "next build && (npm run optimize-images:advanced || true) && (npm run generate-responsive-images || true) && (npm run extract-critical-css || true) && (npm run optimize-js-delivery || true) && (npm run optimize-resource-hints || true) && (npm run minify-html || true) && (npm run compress-assets || true)",
-    "build:super": "node scripts/safe-build.js",
-    "build:github": "node scripts/build-with-fallback.js",
-    "install-deps": "node scripts/install-dependencies.js",
-    "github-setup": "node scripts/github-setup.js"
+    "check-firebase": "node check-firebase-config.js"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -47,15 +30,8 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "archiver": "^7.0.1",
-    "brotli": "^1.3.3",
-    "cheerio": "^1.0.0-rc.12",
-    "critical": "^5.1.1",
     "eslint": "^8.47.0",
     "eslint-config-next": "^14.0.0",
-    "html-minifier": "^4.0.0",
-    "next-image-export-optimizer": "^1.10.0",
-    "sharp": "^0.32.6",
-    "typescript": "^5.1.6",
-    "webpack-bundle-analyzer": "^4.9.0"
+    "typescript": "^5.1.6"
   }
 }
