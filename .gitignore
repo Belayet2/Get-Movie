@@ -30,4 +30,15 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts 
+next-env.d.ts
+
+# deployment
+netlify-deploy.zip
+
+# IDE
+.idea
+.vscode
+
+# Temporary files
+.temp
+.tmp 

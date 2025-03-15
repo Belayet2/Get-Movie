@@ -10,6 +10,81 @@ A Next.js application for browsing and managing movies, with Firebase integratio
 - Firebase authentication for admin access
 - Static site generation for optimal performance
 
+## Build Options
+
+This project includes several build options to accommodate different needs:
+
+### Standard Build
+
+```bash
+npm run build
+```
+
+This runs the standard Next.js build process.
+
+### Optimized Build
+
+```bash
+npm run build:optimized
+```
+
+This runs a comprehensive optimization pipeline:
+
+1. Next.js build
+2. Advanced image optimization (WebP and AVIF formats)
+3. Responsive image generation
+4. Critical CSS extraction
+5. JavaScript delivery optimization
+6. Resource hints optimization
+7. HTML minification
+8. Asset compression (Brotli and Gzip)
+
+### Safe Build
+
+```bash
+npm run build:safe
+```
+
+Similar to the optimized build, but continues even if individual optimization steps fail.
+
+### Super Build
+
+```bash
+npm run build:super
+```
+
+The most robust build option that:
+
+1. Checks and installs missing dependencies
+2. Runs the Next.js build
+3. Performs all optimizations with detailed logging
+4. Continues on non-critical errors
+
+### Netlify Optimized Build
+
+```bash
+npm run netlify-build:optimized
+```
+
+A specialized build for Netlify deployment that:
+
+1. Checks dependencies
+2. Runs the Next.js build
+3. Executes the Netlify-specific build script
+4. Performs essential optimizations
+
+## Performance Optimizations
+
+This project includes numerous performance optimizations:
+
+- **Image Optimization**: WebP and AVIF formats with responsive sizing
+- **CSS Optimization**: Critical CSS extraction and inlining
+- **JavaScript Optimization**: Module/nomodule pattern, deferred loading
+- **Resource Hints**: Preconnect, dns-prefetch, and preload directives
+- **Compression**: Brotli and Gzip compression for static assets
+- **Caching Strategy**: Optimized cache headers in Netlify configuration
+- **Offline Support**: Service worker for offline capabilities
+
 ## Getting Started
 
 ### Prerequisites
@@ -55,14 +130,24 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
+### Netlify with GitHub Integration (Recommended)
+
+This project is configured for automatic deployment to Netlify via GitHub:
+
+1. Push your code to GitHub
+2. Connect your GitHub repository to Netlify
+3. Netlify will automatically build and deploy your site
+
+For detailed instructions, see [NETLIFY_GITHUB_DEPLOY_GUIDE.md](./NETLIFY_GITHUB_DEPLOY_GUIDE.md).
+
 ### Netlify Manual Deployment
 
-This project is configured for manual deployment to Netlify. Follow these steps:
+Alternatively, you can manually deploy to Netlify:
 
 1. Build the project:
 
 ```bash
-npm run netlify-build
+npm run netlify-build:optimized
 ```
 
 2. Create a deployment zip file:
@@ -76,7 +161,7 @@ npm run create-deploy-zip
    - Go to "Sites" and click "Add new site" > "Deploy manually"
    - Upload the `netlify-deploy.zip` file
 
-For detailed deployment instructions, see [NETLIFY_DEPLOY_GUIDE.md](./NETLIFY_DEPLOY_GUIDE.md).
+For detailed manual deployment instructions, see [NETLIFY_DEPLOY_GUIDE.md](./NETLIFY_DEPLOY_GUIDE.md).
 
 ## Project Structure
 
@@ -102,3 +187,11 @@ For detailed deployment instructions, see [NETLIFY_DEPLOY_GUIDE.md](./NETLIFY_DE
 ## License
 
 This project is licensed under the MIT License.
+
+## Dependency Management
+
+```bash
+npm run install-deps
+```
+
+Checks for and installs missing dependencies required for the build process.

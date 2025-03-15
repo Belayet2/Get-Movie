@@ -13,6 +13,9 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    domains: ['getmoviefast.netlify.app'],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
   },
   // Configure static generation
   distDir: '.next',
@@ -24,6 +27,26 @@ const nextConfig = {
   experimental: {
     appDocumentPreloading: true,
   },
+  // Optimize JavaScript and CSS
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Enable compression
+  compress: true,
+  // Add bundle analyzer in development
+  ...(process.env.ANALYZE === 'true' && {
+    webpack(config) {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'server',
+          analyzerPort: 8888,
+          openAnalyzer: true,
+        })
+      );
+      return config;
+    },
+  }),
 }
 
 module.exports = nextConfig
