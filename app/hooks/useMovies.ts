@@ -25,7 +25,10 @@ export function useMovies(): UseMoviesReturn {
       }
       
       const data = await getAllMovies();
-      setMovies(data);
+      
+      // Filter to only include live movies
+      const liveMovies = data.filter(movie => movie.status === 'live');
+      setMovies(liveMovies);
     } catch (err) {
       console.error('Error fetching movies:', err);
       setError(err instanceof Error ? err : new Error('Failed to fetch movies'));

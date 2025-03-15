@@ -55,6 +55,16 @@ export default function AdminNavbar() {
                 Home
               </Link>
               <Link
+                href="/admin-control-panel/manage-movies"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  pathname === "/admin-control-panel/manage-movies"
+                    ? "border-indigo-500 text-gray-900 dark:text-white"
+                    : "border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                }`}
+              >
+                Manage Movies
+              </Link>
+              <Link
                 href="/admin-control-panel/add-movie"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                   pathname === "/admin-control-panel/add-movie"
@@ -66,7 +76,7 @@ export default function AdminNavbar() {
               </Link>
             </div>
           </div>
-          
+
           <div className="flex items-center">
             {/* Mobile menu button */}
             <div className="sm:hidden flex items-center mr-4">
@@ -78,7 +88,7 @@ export default function AdminNavbar() {
                 <span className="sr-only">Open main menu</span>
                 {/* Icon when menu is closed */}
                 <svg
-                  className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
+                  className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -94,7 +104,7 @@ export default function AdminNavbar() {
                 </svg>
                 {/* Icon when menu is open */}
                 <svg
-                  className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
+                  className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -110,7 +120,7 @@ export default function AdminNavbar() {
                 </svg>
               </button>
             </div>
-            
+
             <button
               onClick={() => {
                 localStorage.removeItem("adminLoggedIn");
@@ -127,7 +137,7 @@ export default function AdminNavbar() {
       {/* Mobile menu, show/hide based on menu state */}
       <div
         ref={mobileMenuRef}
-        className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}
+        className={`${isMenuOpen ? "block" : "hidden"} sm:hidden`}
       >
         <div className="pt-2 pb-3 space-y-1 border-t border-gray-200 dark:border-gray-700">
           <Link
@@ -139,6 +149,16 @@ export default function AdminNavbar() {
             }`}
           >
             Home
+          </Link>
+          <Link
+            href="/admin-control-panel/manage-movies"
+            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+              pathname === "/admin-control-panel/manage-movies"
+                ? "border-indigo-500 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20"
+                : "border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+            }`}
+          >
+            Manage Movies
           </Link>
           <Link
             href="/admin-control-panel/add-movie"

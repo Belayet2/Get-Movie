@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import MovieCard from "../components/MovieCard";
 import GenreFilter from "../components/GenreFilter";
 import MovieRecommendations from "../components/MovieRecommendations";
+import RecommendMovieButton from "../components/RecommendMovieButton";
 import { useMovies } from "../hooks/useMovies";
 import { Movie } from "../types/movie";
 
@@ -298,6 +299,16 @@ function MoviesContent() {
                   }
                 </div>
               </div>
+
+              {/* Quick Recommend Button - Show when there's a search query */}
+              {searchQuery.trim().length > 0 && !isLoading && (
+                <div className="mt-3">
+                  <RecommendMovieButton
+                    searchQuery={searchQuery}
+                    movies={allMovies}
+                  />
+                </div>
+              )}
             </div>
           </div>
 

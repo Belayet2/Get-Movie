@@ -39,7 +39,9 @@ const convertMovie = (doc: QueryDocumentSnapshot<DocumentData>): Movie => {
     runtime: data.runtime || '',
     firestoreId: doc.id, // Store the Firestore document ID
     slug: createSlug(data.title), // Add slug for URL
-    siteInfo: data.siteInfo || []
+    siteInfo: data.siteInfo || [],
+    status: data.status || 'pending',
+    pendingType: data.pendingType || 'admin'
   };
 };
 
@@ -202,45 +204,46 @@ export const searchMovies = async (searchTerm: string): Promise<Movie[]> => {
 };
 
 // Add a new movie
-export const addMovie = async (movie: Omit<Movie, 'firestoreId' | 'slug'>): Promise<string> => {
+export const addMovie = async (
+  movie: Omit<Movie, 'firestoreId' | 'slug'>, 
+  adminKey?: string,
+  addedBy: 'admin' | 'user' = 'admin'
+): Promise<string> => {
   try {
     const moviesCollection = collection(db, 'movies');
     
-    // Add timestamp
+    // Determine movie status based on admin key
+    let status: 'live' | 'pending' = 'pending';
+    let pendingType = addedBy;
+
+    // Verify admin key if provided
+    if (adminKey) {
+      // Get the admin credentials
+      const adminDoc = await getDoc(doc(db, 'admin', 'admin_credentials'));
+      if (adminDoc.exists()) {
+        const adminData = adminDoc.data();
+        // Compare the provided key with the stored admin key
+        if (adminKey === adminData.key) {
+          // If admin key is valid, set status to live
+          status = 'live';
+        }
+      }
+    }
+    
+    // Add timestamp and status
     const movieWithTimestamp = {
       ...movie,
       createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
+      status,
+      pendingType,
+      addedBy // Track who added the movie
     };
     
     const docRef = await addDoc(moviesCollection, movieWithTimestamp);
     
     // Clear the cache to ensure fresh data is fetched next time
     clearMoviesCache();
-    
-    // Trigger revalidation for the new movie
-    const slug = createSlug(movie.title);
-    try {
-      const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN || 'your-secret-token';
-      
-      // Only trigger in production environment
-      if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-        await fetch('/api/revalidate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token: revalidationToken,
-            slug,
-          }),
-        });
-        console.log('Revalidation triggered for new movie:', slug);
-      }
-    } catch (revalidateError) {
-      console.error('Failed to trigger revalidation:', revalidateError);
-      // Continue even if revalidation fails
-    }
     
     return docRef.id;
   } catch (error) {
@@ -250,55 +253,83 @@ export const addMovie = async (movie: Omit<Movie, 'firestoreId' | 'slug'>): Prom
 };
 
 // Update a movie
-export const updateMovie = async (firestoreId: string, movie: Partial<Movie>): Promise<void> => {
+export const updateMovie = async (
+  firestoreId: string, 
+  movie: Partial<Movie> & { 
+    adminKey?: string;
+  }
+): Promise<void> => {
   try {
     const movieRef = doc(db, 'movies', firestoreId);
+    const movieDoc = await getDoc(movieRef);
     
-    // Add updated timestamp
-    const movieWithTimestamp = {
-      ...movie,
-      updatedAt: serverTimestamp()
-    };
+    if (!movieDoc.exists()) {
+      throw new Error('Movie not found');
+    }
+
+    const movieData = movieDoc.data();
     
-    await updateDoc(movieRef, movieWithTimestamp);
+    // Get current movie data
+    const currentStatus = movieData.status || 'pending';
+    const currentPendingType = movieData.pendingType || 'admin';
+    const addedBy = movieData.addedBy || 'admin';
     
-    // Clear the cache to ensure fresh data is fetched next time
-    clearMoviesCache();
+    // Default status and pendingType
+    let status = 'pending';
+    let pendingType = currentPendingType;
     
-    // Trigger revalidation if the title was updated (which would change the slug)
-    if (movie.title) {
-      const slug = createSlug(movie.title);
-      try {
-        const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN || 'your-secret-token';
-        
-        // Only trigger in production environment
-        if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-          await fetch('/api/revalidate', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              token: revalidationToken,
-              slug,
-            }),
-          });
-          console.log('Revalidation triggered for updated movie:', slug);
+    // Verify admin key if provided
+    if (movie.adminKey) {
+      // Get the admin credentials
+      const adminDoc = await getDoc(doc(db, 'admin', 'admin_credentials'));
+      if (adminDoc.exists()) {
+        const adminData = adminDoc.data();
+        // Compare the provided key with the stored admin key
+        if (movie.adminKey === adminData.key) {
+          // If admin key is valid, set status to live
+          status = 'live';
         }
-      } catch (revalidateError) {
-        console.error('Failed to trigger revalidation:', revalidateError);
-        // Continue even if revalidation fails
       }
     }
+    
+    // If admin key is invalid or not provided, keep in pending with correct pendingType
+    if (status === 'pending') {
+      pendingType = addedBy === 'admin' ? 'admin' : 'user';
+    }
+
+    // Remove adminKey from the update data
+    const { adminKey, ...updateData } = movie;
+
+    // Update the movie with timestamp and status information
+    await updateDoc(movieRef, {
+      ...updateData,
+      updatedAt: serverTimestamp(),
+      status,
+      pendingType
+    });
+
+    // Clear the cache to ensure fresh data is fetched next time
+    clearMoviesCache();
   } catch (error) {
-    console.error(`Error updating movie with ID ${firestoreId}:`, error);
+    console.error(`Error updating movie ${firestoreId}:`, error);
     throw error;
   }
 };
 
 // Delete a movie
-export const deleteMovie = async (firestoreId: string): Promise<void> => {
+export const deleteMovie = async (firestoreId: string, adminPassword: string): Promise<void> => {
   try {
+    // Verify admin password
+    const adminDoc = await getDoc(doc(db, 'admin', 'admin_credentials'));
+    if (!adminDoc.exists()) {
+      throw new Error('Admin credentials not found');
+    }
+    
+    const adminData = adminDoc.data();
+    if (adminData.password !== adminPassword) {
+      throw new Error('Invalid admin password');
+    }
+    
     const movieRef = doc(db, 'movies', firestoreId);
     await deleteDoc(movieRef);
     

@@ -3,28 +3,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useMovies } from "./hooks/useMovies";
-import { Movie } from "./types/movie";
 
 export default function Home() {
   const { movies, loading, error, refetch } = useMovies();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
-
-  // Effect to filter movies based on search query
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredMovies(movies);
-      return;
-    }
-
-    const query = searchQuery.toLowerCase().trim();
-    const filtered = movies.filter(
-      (movie) =>
-        movie.title.toLowerCase().includes(query) ||
-        movie.genres.some((genre) => genre.toLowerCase().includes(query))
-    );
-    setFilteredMovies(filtered);
-  }, [searchQuery, movies]);
 
   // Force refetch when the component mounts or becomes visible
   useEffect(() => {

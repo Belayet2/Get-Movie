@@ -32,6 +32,7 @@ export default function EditMovieClient({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [adminKey, setAdminKey] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -123,31 +124,39 @@ export default function EditMovieClient({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!movie?.firestoreId) return;
-
     setSaving(true);
     setError("");
 
     try {
-      if (!title || !year || !rating || genres.length === 0) {
-        throw new Error("Please fill in all required fields");
+      if (!movie?.firestoreId) {
+        throw new Error("Movie not found");
       }
 
-      const ratingNumber = parseFloat(rating);
-      if (isNaN(ratingNumber) || ratingNumber < 0 || ratingNumber > 10) {
+      if (!title) {
+        throw new Error("Please enter a movie title");
+      }
+
+      const ratingNumber = rating ? parseFloat(rating) : 0;
+      if (
+        rating &&
+        (isNaN(ratingNumber) || ratingNumber < 0 || ratingNumber > 10)
+      ) {
         throw new Error("Rating must be a number between 0 and 10");
       }
 
       await updateMovie(movie.firestoreId, {
         title,
-        year,
+        year: year || "",
         rating: ratingNumber,
-        genres,
-        posterPath,
-        siteInfo,
+        genres: genres.length > 0 ? genres : [],
+        posterPath: posterPath || "",
+        siteInfo: siteInfo || [],
+        description: movie.description || "",
+        adminKey,
       });
 
-      router.push("/admin-control-panel");
+      alert("Movie updated successfully!");
+      router.push("/admin-control-panel/manage-movies");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update movie");
     } finally {
@@ -210,6 +219,22 @@ export default function EditMovieClient({
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Admin Key Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Admin Key{" "}
+                  <span className="text-gray-500 text-sm">
+                    (Required to move to live section)
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  value={adminKey}
+                  onChange={(e) => setAdminKey(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
               {/* Basic Movie Information */}
               <div className="space-y-6">
                 <div>
@@ -227,20 +252,31 @@ export default function EditMovieClient({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Poster URL *
+                    Poster URL
                   </label>
                   <input
                     type="url"
                     value={posterPath}
                     onChange={(e) => setPosterPath(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
-                    required
+                    className="w-full px-3 sm:px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    IMDB Rating *
+                    Year
+                  </label>
+                  <input
+                    type="number"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="w-full px-3 sm:px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Rating
                   </label>
                   <input
                     type="number"
@@ -249,27 +285,13 @@ export default function EditMovieClient({
                     max="10"
                     value={rating}
                     onChange={(e) => setRating(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
-                    required
+                    className="w-full px-3 sm:px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Year *
-                  </label>
-                  <input
-                    type="text"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Genres *
+                    Genres
                   </label>
                   <div className="flex gap-2 mb-2">
                     <input
