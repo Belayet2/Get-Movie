@@ -1,12 +1,16 @@
-// Register service worker only in production and if supported by the browser
-if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(error => {
-                console.log('ServiceWorker registration failed: ', error);
-            });
+// Only register service worker in production
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.location.hostname !== 'localhost') {
+    window.addEventListener('load', function () {
+        try {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function (error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        } catch (error) {
+            console.log('Error during Service Worker registration:', error);
+        }
     });
 } 
