@@ -42,26 +42,14 @@ export default function AdminLoginPage() {
           secure: window.location.protocol === "https:",
         });
 
-        // Also set server-side HTTP-only cookie via API
-        try {
-          await fetch("/api/auth", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ action: "login" }),
-          });
-        } catch (err) {
-          console.error("Failed to set server cookie:", err);
-        }
-
         // Navigate to admin panel
         router.push("/admin-control-panel");
       } else {
         setError("Invalid username or password");
       }
-    } catch (err) {
-      setError("Login failed. Please try again.");
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred during login. Please try again.");
     } finally {
       setLoading(false);
     }

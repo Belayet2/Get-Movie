@@ -39,19 +39,6 @@ export default function AdminNavbar() {
     localStorage.removeItem("adminLoggedIn");
     Cookies.remove("adminLoggedIn", { path: "/" });
 
-    // Also clear server-side cookie via API
-    try {
-      await fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action: "logout" }),
-      });
-    } catch (err) {
-      console.error("Failed to clear server cookie:", err);
-    }
-
     // Navigate to login page
     router.push("/admin-login");
   };

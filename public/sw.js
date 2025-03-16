@@ -40,6 +40,11 @@ self.addEventListener('activate', event => {
 
 // Fetch event - handle requests
 self.addEventListener('fetch', event => {
+    // Skip chrome-extension URLs and non-GET requests
+    if (event.request.url.startsWith('chrome-extension:') || event.request.method !== 'GET') {
+        return;
+    }
+
     // Special handling for about page
     if (event.request.url.includes('/about') && !event.request.url.endsWith('/')) {
         // For the about page, use navigation preload if available
@@ -68,7 +73,10 @@ self.addEventListener('fetch', event => {
 
                     caches.open(CACHE_NAME)
                         .then(cache => {
-                            cache.put(event.request, responseToCache);
+                            // Only cache same-origin requests
+                            if (event.request.url.startsWith(self.location.origin)) {
+                                cache.put(event.request, responseToCache);
+                            }
                         });
 
                     return response;
@@ -85,7 +93,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         fetch(event.request)
             .then(response => {
-                // Don't cache if not a valid response
+                // Check if we received a valid response
                 if (!response || response.status !== 200 || response.type !== 'basic') {
                     return response;
                 }
@@ -95,7 +103,10 @@ self.addEventListener('fetch', event => {
 
                 caches.open(CACHE_NAME)
                     .then(cache => {
-                        cache.put(event.request, responseToCache);
+                        // Only cache same-origin requests
+                        if (event.request.url.startsWith(self.location.origin)) {
+                            cache.put(event.request, responseToCache);
+                        }
                     });
 
                 return response;
