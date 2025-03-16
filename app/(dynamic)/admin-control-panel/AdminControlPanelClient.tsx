@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import AdminNavbar from "@/app/components/AdminNavbar";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 export default function AdminControlPanelClient() {
   const [loading, setLoading] = useState(true);
@@ -20,12 +21,15 @@ export default function AdminControlPanelClient() {
     if (isSubpage) {
       // Log out the admin if they're on a subpage
       localStorage.removeItem("adminLoggedIn");
+      Cookies.remove("adminLoggedIn", { path: "/" });
       router.replace("/admin-login");
       return;
     }
 
     // Otherwise, check if they're logged in
-    const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
+    const isLoggedIn =
+      localStorage.getItem("adminLoggedIn") === "true" ||
+      Cookies.get("adminLoggedIn") === "true";
     if (!isLoggedIn) {
       router.replace("/admin-login");
       return;

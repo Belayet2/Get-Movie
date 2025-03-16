@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { verifyAdminCredentials } from "../firebase/adminAuth";
+import Cookies from "js-cookie";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -28,7 +29,9 @@ export default function AdminLoginPage() {
     try {
       const isValid = await verifyAdminCredentials(username, password);
       if (isValid) {
+        // Set both localStorage and cookie for authentication
         localStorage.setItem("adminLoggedIn", "true");
+        Cookies.set("adminLoggedIn", "true", { path: "/", expires: 1 }); // Expires in 1 day
         router.push("/admin-control-panel");
       } else {
         setError("Invalid username or password");

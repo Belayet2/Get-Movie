@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import Cookies from "js-cookie";
 
 export default function AdminNavbar() {
   const pathname = usePathname();
@@ -124,6 +125,7 @@ export default function AdminNavbar() {
             <button
               onClick={() => {
                 localStorage.removeItem("adminLoggedIn");
+                Cookies.remove("adminLoggedIn", { path: "/" });
                 window.location.href = "/admin-login";
               }}
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"

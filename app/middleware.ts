@@ -7,16 +7,18 @@ export function middleware(request: NextRequest) {
 
   // Check if the path is for the admin control panel
   if (pathname.startsWith('/admin-control-panel')) {
-    // For the main admin control panel page, check client-side authentication
-    if (pathname === '/admin-control-panel') {
-      return NextResponse.next();
+    // For the main admin control panel page, check for authentication cookie
+    // instead of redirecting immediately
+    const isAuthenticated = request.cookies.has('adminLoggedIn');
+    
+    if (!isAuthenticated) {
+      // If not authenticated, redirect to login
+      const url = new URL('/admin-login', request.url);
+      return NextResponse.redirect(url);
     }
     
-    // For any subpage, redirect to login
-    // This ensures that even if the client-side check is bypassed,
-    // the server will still redirect to the login page
-    const url = new URL('/admin-login', request.url);
-    return NextResponse.redirect(url);
+    // If authenticated, allow access
+    return NextResponse.next();
   }
   
   // For all other routes, continue normally
