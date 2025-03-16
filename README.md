@@ -55,28 +55,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-### Netlify Manual Deployment
-
-This project is configured for manual deployment to Netlify. Follow these steps:
-
-1. Build the project:
+To build the project for production:
 
 ```bash
-npm run netlify-build
+npm run build
+# or
+yarn build
 ```
-
-2. Create a deployment zip file:
-
-```bash
-npm run create-deploy-zip
-```
-
-3. Upload to Netlify:
-   - Log in to your Netlify account
-   - Go to "Sites" and click "Add new site" > "Deploy manually"
-   - Upload the `netlify-deploy.zip` file
-
-For detailed deployment instructions, see [NETLIFY_DEPLOY_GUIDE.md](./NETLIFY_DEPLOY_GUIDE.md).
 
 ## Project Structure
 
@@ -89,7 +74,6 @@ For detailed deployment instructions, see [NETLIFY_DEPLOY_GUIDE.md](./NETLIFY_DE
   - `page.tsx` - Home page
   - `layout.tsx` - Root layout component
 - `public/` - Static assets
-- `out/` - Production build output (generated)
 
 ## Technologies Used
 
