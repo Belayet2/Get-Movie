@@ -55,13 +55,32 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-To build the project for production:
+### Local Build
+
+To build the project for production locally:
 
 ```bash
 npm run build
 # or
 yarn build
 ```
+
+### Netlify Deployment
+
+This project is configured for deployment to Netlify:
+
+1. Connect your GitHub repository to Netlify
+2. Set the build command to: `npm run netlify-build`
+3. Set the publish directory to: `out`
+4. Add your Firebase environment variables in the Netlify dashboard
+
+Alternatively, you can deploy manually:
+
+```bash
+npm run netlify-build
+```
+
+Then upload the `out` directory to Netlify.
 
 ## Project Structure
 

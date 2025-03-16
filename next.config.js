@@ -16,6 +16,7 @@ const nextConfig = {
   },
   // Configure static generation
   distDir: '.next',
+  trailingSlash: true,
   // For better performance
   experimental: {
     appDocumentPreloading: true,

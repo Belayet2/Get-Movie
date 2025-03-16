@@ -1,0 +1,6 @@
+# Netlify redirects file
+# Handle all routes with client-side routing
+/*    /index.html   200
+
+# Specific redirects for dynamic routes
+/movies/*    /index.html   200 
