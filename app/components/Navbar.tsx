@@ -8,6 +8,7 @@ import {
   memo,
   lazy,
   Suspense,
+  useCallback,
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -131,23 +132,22 @@ const Navbar = memo(function Navbar() {
   };
 
   // Handle movie selection from recommendations
-  const handleSelectMovie = useMemo(() => {
-    return (movie: Movie) => {
+  const handleSelectMovie = useCallback(
+    (movie: Movie) => {
       setSearchQuery("");
       setShowRecommendations(false);
       setShowSearch(false);
       setIsFocused(false);
       setIsMenuOpen(false);
 
-      // Navigate to the movie detail page using the slug
       if (movie.slug) {
         router.push(`/movies/${movie.slug}`);
       } else {
-        // Fallback to search if no slug is available
         router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
       }
-    };
-  }, [router]);
+    },
+    [router]
+  );
 
   // If not mounted yet (server-side), render a simpler version
   if (!mounted) {
