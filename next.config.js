@@ -20,15 +20,6 @@ const nextConfig = {
   // For better performance
   experimental: {
     appDocumentPreloading: true,
-    optimizeCss: true,
-    optimizePackageImports: ['react', 'react-dom', 'firebase', '@hello-pangea/dnd'],
-  },
-  // Optimize bundle size
-  swcMinify: true,
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
   },
 }
 

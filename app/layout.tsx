@@ -18,10 +18,6 @@ export const metadata: Metadata = {
       url: "/images/logo/movie-logo.png",
     },
   },
-  metadataBase: new URL("https://getmoviefast.netlify.app"),
-  alternates: {
-    canonical: "/",
-  },
 };
 
 export default function RootLayout({

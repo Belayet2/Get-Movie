@@ -24,18 +24,10 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
-
-# IDE
-.idea
-.vscode
-
-# Netlify
-.netlify 
+next-env.d.ts 

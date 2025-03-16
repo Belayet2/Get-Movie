@@ -21,33 +21,7 @@ import { Movie, SiteInfo } from '../types/movie';
 // Cache for movies to avoid excessive Firestore reads
 let moviesCache: Movie[] | null = null;
 let lastFetchTime = 0;
-const CACHE_EXPIRY = 300000; // 5 minutes cache expiry (increased from 1 minute)
-
-// Local storage key for caching
-const MOVIES_CACHE_KEY = 'movies_cache';
-const CACHE_TIMESTAMP_KEY = 'movies_cache_timestamp';
-
-// Initialize cache from localStorage if available (client-side only)
-if (typeof window !== 'undefined') {
-  try {
-    const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-    const cachedMovies = localStorage.getItem(MOVIES_CACHE_KEY);
-    
-    if (cachedTimestamp && cachedMovies) {
-      const timestamp = parseInt(cachedTimestamp, 10);
-      const now = Date.now();
-      
-      // Use cached data if it's still valid
-      if (now - timestamp < CACHE_EXPIRY) {
-        moviesCache = JSON.parse(cachedMovies);
-        lastFetchTime = timestamp;
-        console.log('Initialized cache from localStorage');
-      }
-    }
-  } catch (error) {
-    console.error('Error reading cache from localStorage:', error);
-  }
-}
+const CACHE_EXPIRY = 60000; // 1 minute cache expiry
 
 // Convert Firestore document to Movie type
 const convertMovie = (doc: QueryDocumentSnapshot<DocumentData>): Movie => {
@@ -85,17 +59,6 @@ export const createSlug = (title: string): string => {
 export const clearMoviesCache = () => {
   moviesCache = null;
   lastFetchTime = 0;
-  
-  // Clear localStorage cache too
-  if (typeof window !== 'undefined') {
-    try {
-      localStorage.removeItem(MOVIES_CACHE_KEY);
-      localStorage.removeItem(CACHE_TIMESTAMP_KEY);
-    } catch (error) {
-      console.error('Error clearing localStorage cache:', error);
-    }
-  }
-  
   console.log('Movies cache cleared');
 };
 
@@ -118,16 +81,6 @@ export const getAllMovies = async (): Promise<Movie[]> => {
     // Update cache
     moviesCache = movies;
     lastFetchTime = now;
-    
-    // Update localStorage cache (client-side only)
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(MOVIES_CACHE_KEY, JSON.stringify(movies));
-        localStorage.setItem(CACHE_TIMESTAMP_KEY, now.toString());
-      } catch (error) {
-        console.error('Error saving to localStorage:', error);
-      }
-    }
     
     return movies;
   } catch (error) {
