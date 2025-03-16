@@ -10,6 +10,7 @@
     "export": "next build",
     "netlify-build": "next build && node netlify-build.js",
     "postbuild": "node netlify-build.js",
+    "test-build": "node test-build.js",
     "create-deploy-zip": "node create-deploy-zip.js",
     "check-firebase": "node check-firebase-config.js"
   },

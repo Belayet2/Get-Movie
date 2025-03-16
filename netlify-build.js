@@ -83,21 +83,67 @@ function createDynamicRouteFallbacks() {
     }
 }
 
-// Main function
-function main() {
-    console.log('Running post-build steps for Netlify deployment...');
+// Function to ensure the about page is properly accessible
+function ensureAboutPageRedirect() {
+    console.log('Ensuring about page redirection...');
 
-    // Create out directory if it doesn't exist
-    if (!fs.existsSync(path.join(__dirname, 'out'))) {
-        fs.mkdirSync(path.join(__dirname, 'out'), { recursive: true });
+    // Create about.html in the out directory if it doesn't exist
+    const aboutHtmlPath = path.join(__dirname, 'out', 'about.html');
+    if (!fs.existsSync(aboutHtmlPath)) {
+        const aboutHtmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting to About Page</title>
+  <meta http-equiv="refresh" content="0; URL=/about/">
+  <link rel="canonical" href="/about/">
+</head>
+<body>
+  <p>Redirecting to <a href="/about/">About page</a>...</p>
+</body>
+</html>
+        `;
+
+        fs.writeFileSync(aboutHtmlPath, aboutHtmlContent.trim());
+        console.log('Created about.html redirect file');
     }
 
-    // Run post-build steps
-    copyRedirectsFile();
-    createRuntimeConfig();
-    createDynamicRouteFallbacks();
+    // Ensure _redirects file exists and has the about page redirect
+    const redirectsPath = path.join(__dirname, 'out', '_redirects');
+    let redirectsContent = '';
 
-    console.log('Post-build steps completed successfully');
+    if (fs.existsSync(redirectsPath)) {
+        redirectsContent = fs.readFileSync(redirectsPath, 'utf8');
+    }
+
+    // Check if about redirect exists
+    if (!redirectsContent.includes('/about')) {
+        const newRedirectsContent = `# Netlify redirects file
+/about    /about/    301!
+/about.html    /about/    301!
+${redirectsContent.includes('/*') ? '' : '/*    /index.html   200'}
+${redirectsContent}`;
+
+        fs.writeFileSync(redirectsPath, newRedirectsContent.trim());
+        console.log('Updated _redirects file with about page redirect');
+    }
+}
+
+// Main function
+async function main() {
+    try {
+        // Run all post-build steps
+        copyRedirectsFile();
+        createRuntimeConfig();
+        createDynamicRouteFallbacks();
+        ensureAboutPageRedirect();
+
+        console.log('Netlify build script completed successfully');
+    } catch (error) {
+        console.error('Error in Netlify build script:', error);
+        process.exit(1);
+    }
 }
 
 // Run the main function

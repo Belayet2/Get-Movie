@@ -23,26 +23,6 @@ const nextConfig = {
   experimental: {
     appDocumentPreloading: true,
   },
-  // Add rewrites for about page
-  async rewrites() {
-    return [
-      {
-        source: '/about',
-        destination: '/about/',
-        permanent: true,
-      },
-    ];
-  },
-  // Add redirects for about page
-  async redirects() {
-    return [
-      {
-        source: '/about',
-        destination: '/about/',
-        permanent: true,
-      },
-    ];
-  },
 }
 
 module.exports = nextConfig
