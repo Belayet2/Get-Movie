@@ -15,6 +15,13 @@
   status = 200
   force = true
 
+# Service worker should be served with correct content type
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Cache-Control = "max-age=0, no-cache, no-store, must-revalidate"
+
 # Handle all routes with client-side routing
 [[redirects]]
   from = "/*"

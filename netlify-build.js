@@ -37,18 +37,63 @@ window.NETLIFY_RUNTIME = {
     fs.writeFileSync(path.join(__dirname, 'out', 'netlify-runtime.js'), runtimeConfig.trim());
     console.log('Created runtime config in out directory');
 
-    // Update the index.html to include this script
+    // Copy service worker files to out directory
+    if (fs.existsSync(path.join(__dirname, 'public', 'sw.js'))) {
+        fs.copyFileSync(
+            path.join(__dirname, 'public', 'sw.js'),
+            path.join(__dirname, 'out', 'sw.js')
+        );
+        console.log('Copied service worker to out directory');
+    }
+
+    if (fs.existsSync(path.join(__dirname, 'public', 'register-sw.js'))) {
+        fs.copyFileSync(
+            path.join(__dirname, 'public', 'register-sw.js'),
+            path.join(__dirname, 'out', 'register-sw.js')
+        );
+        console.log('Copied service worker registration script to out directory');
+    }
+
+    // Update the index.html to include these scripts
     const indexPath = path.join(__dirname, 'out', 'index.html');
     if (fs.existsSync(indexPath)) {
         let indexContent = fs.readFileSync(indexPath, 'utf8');
+
+        // Add runtime config if not already present
         if (!indexContent.includes('netlify-runtime.js')) {
             indexContent = indexContent.replace(
                 '</head>',
                 '<script src="/netlify-runtime.js"></script></head>'
             );
-            fs.writeFileSync(indexPath, indexContent);
-            console.log('Updated index.html to include runtime config');
         }
+
+        // Add service worker registration if not already present
+        if (!indexContent.includes('register-sw.js')) {
+            indexContent = indexContent.replace(
+                '</head>',
+                '<script src="/register-sw.js"></script></head>'
+            );
+        }
+
+        fs.writeFileSync(indexPath, indexContent);
+        console.log('Updated index.html to include runtime config and service worker');
+    }
+
+    // Also update about/index.html to include service worker registration
+    const aboutIndexPath = path.join(__dirname, 'out', 'about', 'index.html');
+    if (fs.existsSync(aboutIndexPath)) {
+        let aboutContent = fs.readFileSync(aboutIndexPath, 'utf8');
+
+        // Add service worker registration if not already present
+        if (!aboutContent.includes('register-sw.js')) {
+            aboutContent = aboutContent.replace(
+                '</head>',
+                '<script src="/register-sw.js"></script></head>'
+            );
+        }
+
+        fs.writeFileSync(aboutIndexPath, aboutContent);
+        console.log('Updated about/index.html to include service worker');
     }
 }
 

@@ -1,15 +1,65 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>About Page</title>
-    <meta http-equiv="refresh" content="0; URL=/about/index.html">
-    <link rel="canonical" href="/about/index.html">
+    <title>About Getmovie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learn more about our mission to bring the best movie experience to you.">
+    <link rel="shortcut icon" href="/images/logo/movie-logo.png">
+    <link rel="icon" href="/images/logo/movie-logo.png">
+    <link rel="apple-touch-icon" href="/images/logo/movie-logo.png">
+    <script>
+        // Redirect to the actual about page without using HTTP redirect
+        window.location.replace('/about/');
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9fafb;
+            color: #111827;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1e40af;
+        }
+        p {
+            font-size: 1.125rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+        }
+        .loading {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-
 <body>
-    <p>Loading <a href="/about/index.html">About page</a>...</p>
+    <div class="container">
+        <h1>About Getmovie</h1>
+        <p>Loading the about page content...</p>
+        <div class="loading"></div>
+    </div>
 </body>
-
 </html>
