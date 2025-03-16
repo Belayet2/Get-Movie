@@ -12,29 +12,23 @@ export default function AdminControlPanelClient() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check if the user is on a subpage of admin-control-panel
-    const isSubpage =
-      pathname &&
-      pathname !== "/admin-control-panel" &&
-      pathname.startsWith("/admin-control-panel/");
-
-    if (isSubpage) {
-      // Log out the admin if they're on a subpage
-      localStorage.removeItem("adminLoggedIn");
-      Cookies.remove("adminLoggedIn", { path: "/" });
-      router.replace("/admin-login");
-      return;
-    }
-
-    // Otherwise, check if they're logged in
+    // Check if the user is logged in first
     const isLoggedIn =
       localStorage.getItem("adminLoggedIn") === "true" ||
       Cookies.get("adminLoggedIn") === "true";
+
     if (!isLoggedIn) {
       router.replace("/admin-login");
       return;
     }
 
+    // Only check for subpages if the user is logged in
+    const isSubpage =
+      pathname &&
+      pathname !== "/admin-control-panel" &&
+      pathname.startsWith("/admin-control-panel/");
+
+    // We no longer log out users on subpages, just check if they're authenticated
     setLoading(false);
   }, [router, pathname]);
 

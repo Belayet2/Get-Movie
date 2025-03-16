@@ -15,7 +15,9 @@ export default function AdminLoginPage() {
 
   // Check if already logged in
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
+    const isLoggedIn =
+      localStorage.getItem("adminLoggedIn") === "true" ||
+      Cookies.get("adminLoggedIn") === "true";
     if (isLoggedIn) {
       router.replace("/admin-control-panel");
     }
@@ -29,9 +31,31 @@ export default function AdminLoginPage() {
     try {
       const isValid = await verifyAdminCredentials(username, password);
       if (isValid) {
-        // Set both localStorage and cookie for authentication
+        // Set localStorage for client-side check
         localStorage.setItem("adminLoggedIn", "true");
-        Cookies.set("adminLoggedIn", "true", { path: "/", expires: 1 }); // Expires in 1 day
+
+        // Set client-side cookie
+        Cookies.set("adminLoggedIn", "true", {
+          path: "/",
+          expires: 1, // 1 day
+          sameSite: "strict",
+          secure: window.location.protocol === "https:",
+        });
+
+        // Also set server-side HTTP-only cookie via API
+        try {
+          await fetch("/api/auth", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ action: "login" }),
+          });
+        } catch (err) {
+          console.error("Failed to set server cookie:", err);
+        }
+
+        // Navigate to admin panel
         router.push("/admin-control-panel");
       } else {
         setError("Invalid username or password");

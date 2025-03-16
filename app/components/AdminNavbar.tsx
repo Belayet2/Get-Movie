@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 
 export default function AdminNavbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +33,28 @@ export default function AdminNavbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
+
+  const handleLogout = async () => {
+    // Clear client-side storage
+    localStorage.removeItem("adminLoggedIn");
+    Cookies.remove("adminLoggedIn", { path: "/" });
+
+    // Also clear server-side cookie via API
+    try {
+      await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "logout" }),
+      });
+    } catch (err) {
+      console.error("Failed to clear server cookie:", err);
+    }
+
+    // Navigate to login page
+    router.push("/admin-login");
+  };
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg">
@@ -123,11 +146,7 @@ export default function AdminNavbar() {
             </div>
 
             <button
-              onClick={() => {
-                localStorage.removeItem("adminLoggedIn");
-                Cookies.remove("adminLoggedIn", { path: "/" });
-                window.location.href = "/admin-login";
-              }}
+              onClick={handleLogout}
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
             >
               Logout

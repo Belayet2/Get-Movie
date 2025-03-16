@@ -7,9 +7,9 @@ export function middleware(request: NextRequest) {
 
   // Check if the path is for the admin control panel
   if (pathname.startsWith('/admin-control-panel')) {
-    // For the main admin control panel page, check for authentication cookie
-    // instead of redirecting immediately
-    const isAuthenticated = request.cookies.has('adminLoggedIn');
+    // Check for authentication cookie
+    const isAuthenticated = request.cookies.has('adminLoggedIn') && 
+                           request.cookies.get('adminLoggedIn')?.value === 'true';
     
     if (!isAuthenticated) {
       // If not authenticated, redirect to login
