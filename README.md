@@ -67,6 +67,12 @@ yarn build
 
 ### Netlify Deployment
 
+'''bash
+git add .
+git commit -m "Error Fixed"
+git push -u origin main
+'''
+
 This project is configured for deployment to Netlify:
 
 1. Connect your GitHub repository to Netlify

@@ -1,0 +1,21 @@
+{
+  "name": "Getmovie - Get your favorite movies faster",
+  "short_name": "Getmovie",
+  "description": "Getmovie is a movie search engine that allows you to find your favorite movies faster.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/images/logo/movie-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/logo/movie-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
