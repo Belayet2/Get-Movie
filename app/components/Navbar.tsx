@@ -131,21 +131,23 @@ const Navbar = memo(function Navbar() {
   };
 
   // Handle movie selection from recommendations
-  const handleSelectMovie = (movie: Movie) => {
-    setSearchQuery("");
-    setShowRecommendations(false);
-    setShowSearch(false);
-    setIsFocused(false);
-    setIsMenuOpen(false);
+  const handleSelectMovie = useMemo(() => {
+    return (movie: Movie) => {
+      setSearchQuery("");
+      setShowRecommendations(false);
+      setShowSearch(false);
+      setIsFocused(false);
+      setIsMenuOpen(false);
 
-    // Navigate to the movie detail page using the slug
-    if (movie.slug) {
-      router.push(`/movies/${movie.slug}`);
-    } else {
-      // Fallback to search if no slug is available
-      router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
-    }
-  };
+      // Navigate to the movie detail page using the slug
+      if (movie.slug) {
+        router.push(`/movies/${movie.slug}`);
+      } else {
+        // Fallback to search if no slug is available
+        router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
+      }
+    };
+  }, [router]);
 
   // If not mounted yet (server-side), render a simpler version
   if (!mounted) {
