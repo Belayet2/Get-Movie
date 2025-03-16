@@ -228,12 +228,11 @@ const Navbar = memo(function Navbar() {
         <MovieRecommendations
           searchQuery={searchQuery}
           movies={movies}
-          isLoading={isLoading}
           onSelectMovie={handleSelectMovie}
         />
       </Suspense>
     );
-  }, [showRecommendations, searchQuery, movies, isLoading]);
+  }, [showRecommendations, searchQuery, movies, handleSelectMovie]);
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
