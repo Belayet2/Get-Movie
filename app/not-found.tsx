@@ -1,54 +1,66 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
-  const pathname = usePathname();
+  const router = useRouter();
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
-    // Prevent redirect loops by checking for a redirect flag in sessionStorage
-    const hasRedirected = sessionStorage.getItem("redirected");
+    // Redirect to home page after 5 seconds
+    const timer = setTimeout(() => {
+      router.push("/");
+    }, 5000);
 
-    // Check if this is a movie detail page and we haven't redirected yet
-    if (pathname?.startsWith("/movies/") && !hasRedirected) {
-      const slug = pathname.split("/").pop();
-      console.log("404 for movie with slug:", slug);
+    // Update countdown every second
+    const interval = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
 
-      // Set the redirect flag to prevent loops
-      sessionStorage.setItem("redirected", "true");
-
-      // Clear the flag after 5 seconds to allow future redirects
-      setTimeout(() => {
-        sessionStorage.removeItem("redirected");
-      }, 5000);
-
-      // Redirect to the client-side movie detail page
-      if (slug) {
-        window.location.href = `/movies/${slug}`;
-      }
-    }
-  }, [pathname]);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [router]);
 
   return (
-    <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-[70vh]">
-      <h1 className="text-6xl font-bold text-gray-800 dark:text-white mb-6">
-        404
-      </h1>
-      <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-8">
-        Page Not Found
-      </h2>
-      <p className="text-gray-600 dark:text-gray-400 text-center max-w-md mb-8">
-        The page you are looking for might have been removed, had its name
-        changed, or is temporarily unavailable.
-      </p>
-      <Link
-        href="/"
-        className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-      >
-        Go to Homepage
-      </Link>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+      <div className="text-center max-w-md">
+        <h1 className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+          404
+        </h1>
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+          Page Not Found
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-8">
+          The page you are looking for doesn't exist or has been moved.
+        </p>
+        <div className="space-y-4">
+          <Link
+            href="/"
+            className="block w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          >
+            Go to Home
+          </Link>
+          <Link
+            href="/about/"
+            className="block w-full py-2 px-4 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium rounded-lg transition-colors"
+          >
+            About Us
+          </Link>
+          <Link
+            href="/movies/"
+            className="block w-full py-2 px-4 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium rounded-lg transition-colors"
+          >
+            Browse Movies
+          </Link>
+        </div>
+        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+          Redirecting to home page in {countdown} seconds...
+        </p>
+      </div>
     </div>
   );
 }

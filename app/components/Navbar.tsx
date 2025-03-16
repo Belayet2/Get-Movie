@@ -147,7 +147,7 @@ export default function Navbar() {
                 Movies
               </Link>
               <Link
-                href="/about"
+                href="/about/"
                 className="text-gray-600 dark:text-gray-300 px-3 py-2 rounded-md font-medium"
               >
                 About
@@ -224,9 +224,9 @@ export default function Navbar() {
                 Movies
               </Link>
               <Link
-                href="/about"
+                href="/about/"
                 className={`${
-                  isActive("/about")
+                  isActive("/about") || isActive("/about/")
                     ? "text-blue-600 dark:text-blue-400"
                     : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                 } 
@@ -506,9 +506,9 @@ export default function Navbar() {
                 Movies
               </Link>
               <Link
-                href="/about"
+                href="/about/"
                 className={`${
-                  isActive("/about")
+                  isActive("/about") || isActive("/about/")
                     ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
                     : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 } 

@@ -4,6 +4,12 @@
 
 # Handle all routes with client-side routing
 [[redirects]]
+  from = "/about"
+  to = "/about/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

@@ -29,6 +29,17 @@ const nextConfig = {
       {
         source: '/about',
         destination: '/about/',
+        permanent: true,
+      },
+    ];
+  },
+  // Add redirects for about page
+  async redirects() {
+    return [
+      {
+        source: '/about',
+        destination: '/about/',
+        permanent: true,
       },
     ];
   },
