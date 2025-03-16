@@ -95,12 +95,12 @@ function ensureAboutPageRedirect() {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Redirecting to About Page</title>
-  <meta http-equiv="refresh" content="0; URL=/about/">
-  <link rel="canonical" href="/about/">
+  <title>About Page</title>
+  <meta http-equiv="refresh" content="0; URL=/about/index.html">
+  <link rel="canonical" href="/about/index.html">
 </head>
 <body>
-  <p>Redirecting to <a href="/about/">About page</a>...</p>
+  <p>Loading <a href="/about/index.html">About page</a>...</p>
 </body>
 </html>
         `;
@@ -120,8 +120,8 @@ function ensureAboutPageRedirect() {
     // Check if about redirect exists
     if (!redirectsContent.includes('/about')) {
         const newRedirectsContent = `# Netlify redirects file
-/about    /about/    301!
-/about.html    /about/    301!
+/about    /about/index.html    200!
+/about.html    /about/index.html    200!
 ${redirectsContent.includes('/*') ? '' : '/*    /index.html   200'}
 ${redirectsContent}`;
 

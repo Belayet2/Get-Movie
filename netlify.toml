@@ -2,19 +2,20 @@
   command = "npm run build && node netlify-build.js"
   publish = "out"
 
-# Handle all routes with client-side routing
+# Handle the about page directly without redirects
 [[redirects]]
   from = "/about"
-  to = "/about/"
-  status = 301
+  to = "/about/index.html"
+  status = 200
   force = true
 
 [[redirects]]
   from = "/about.html"
-  to = "/about/"
-  status = 301
+  to = "/about/index.html"
+  status = 200
   force = true
 
+# Handle all routes with client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"

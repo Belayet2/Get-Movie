@@ -1,4 +1,4 @@
 # Netlify redirects file
-/about    /about/    301!
-/about.html    /about/    301!
+/about    /about/index.html    200!
+/about.html    /about/index.html    200!
 /*    /index.html   200 
