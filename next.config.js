@@ -22,7 +22,6 @@ const nextConfig = {
     appDocumentPreloading: true,
     optimizeCss: true,
     optimizePackageImports: ['react', 'react-dom', 'firebase', '@hello-pangea/dnd'],
-    nextScriptWorkers: true,
   },
   // Optimize bundle size
   swcMinify: true,
