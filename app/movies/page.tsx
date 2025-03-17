@@ -477,11 +477,6 @@ function MoviesLoading() {
   );
 }
 
-export const metadata: Metadata = {
-  title: "Movies - GetMovie",
-  description: "Browse the latest movies with Getmovie.",
-};
-
 export default function MoviesPage() {
   return (
     <Suspense fallback={<MoviesLoading />}>
