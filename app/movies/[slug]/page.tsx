@@ -49,13 +49,13 @@ export async function generateMetadata({
     }
 
     return {
-      title: `${movie.title} (${movie.year}) - Movie Finder`,
+      title: `${movie.title} (${movie.year}) - Getmovie`,
       description: movie.description,
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: "Movie Details - Movie Finder",
+      title: "Movie Details - Getmovie",
     };
   }
 }

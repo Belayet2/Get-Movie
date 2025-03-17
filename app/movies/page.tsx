@@ -8,6 +8,7 @@ import MovieRecommendations from "../components/MovieRecommendations";
 import RecommendMovieButton from "../components/RecommendMovieButton";
 import { useMovies } from "../hooks/useMovies";
 import { Movie } from "../types/movie";
+import { Metadata } from "next";
 
 function MoviesContent() {
   const searchParams = useSearchParams();
@@ -475,6 +476,11 @@ function MoviesLoading() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Movies - GetMovie",
+  description: "Browse the latest movies with Getmovie.",
+};
 
 export default function MoviesPage() {
   return (
