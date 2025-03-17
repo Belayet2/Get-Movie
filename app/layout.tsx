@@ -89,6 +89,8 @@ export default function RootLayout({ children, }: { children: React.ReactNode;})
   return (
     <html lang="en">
       <head>
+        {/* Google Search Console Verification Meta Tag */}
+        <meta name="google-site-verification" content="8AQVBky567b4DPaI3mtffaJiXnr9iPZ3q9TxdCnEtfg" />
         {/* JSON-LD Structured Data for Google Rich Snippets */}
         <Script
           id="structured-data"
