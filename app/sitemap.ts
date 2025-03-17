@@ -18,18 +18,27 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // ✅ Fetch movie slugs from Firebase
-  const moviesCollection = collection(db, "movies");
-  const moviesSnapshot = await getDocs(moviesCollection);
-  const movies = moviesSnapshot.docs.map((doc) => doc.id); // Assuming ID is the slug
+  try {
+    // ✅ Fetch movie slugs and their lastModified from Firebase
+    const moviesCollection = collection(db, "movies");
+    const moviesSnapshot = await getDocs(moviesCollection);
+    
+    const movies = await Promise.all(moviesSnapshot.docs.map(async (doc) => {
+      const movieData = doc.data();
+      return { slug: doc.id, lastModified: movieData.updatedAt.toDate() }; // Assuming `updatedAt` is a Firestore Timestamp
+    }));
 
-  return [
-    { url: "https://getmoviefast.netlify.app/", lastModified: new Date() },
-    { url: "https://getmoviefast.netlify.app/about", lastModified: new Date() },
-    { url: "https://getmoviefast.netlify.app/movies", lastModified: new Date() },
-    ...movies.map((slug) => ({
-      url: `https://getmoviefast.netlify.app/movies/${slug}`,
-      lastModified: new Date(),
-    })),
-  ];
+    return [
+      { url: "https://getmoviefast.netlify.app/", lastModified: new Date() },
+      { url: "https://getmoviefast.netlify.app/about", lastModified: new Date() },
+      { url: "https://getmoviefast.netlify.app/movies", lastModified: new Date() },
+      ...movies.map((movie) => ({
+        url: `https://getmoviefast.netlify.app/movies/${movie.slug}`,
+        lastModified: movie.lastModified,
+      })),
+    ];
+  } catch (error) {
+    console.error("Error generating sitemap:", error);
+    return [];
+  }
 }
