@@ -22,7 +22,6 @@ export default function AddMovieClient() {
   const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [description, setDescription] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const router = useRouter();
 
@@ -104,7 +103,6 @@ export default function AddMovieClient() {
           posterPath: posterPath || "",
           id: Date.now(),
           siteInfo: siteInfo || [],
-          description: description || "",
         },
         adminKey
       );
@@ -414,20 +412,6 @@ export default function AddMovieClient() {
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Description Field */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={4}
-                  className="w-full px-3 sm:px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 resize-y"
-                  placeholder="Enter movie description..."
-                ></textarea>
               </div>
 
               <div className="flex justify-end">

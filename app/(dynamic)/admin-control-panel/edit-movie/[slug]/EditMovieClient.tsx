@@ -151,7 +151,6 @@ export default function EditMovieClient({
         genres: genres.length > 0 ? genres : [],
         posterPath: posterPath || "",
         siteInfo: siteInfo || [],
-        description: movie.description || "",
         adminKey,
       });
 

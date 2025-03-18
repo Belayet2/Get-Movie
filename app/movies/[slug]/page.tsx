@@ -50,7 +50,6 @@ export async function generateMetadata({
 
     return {
       title: `${movie.title} (${movie.year}) - Getmovie`,
-      description: movie.description,
     };
   } catch (error) {
     console.error("Error generating metadata:", error);

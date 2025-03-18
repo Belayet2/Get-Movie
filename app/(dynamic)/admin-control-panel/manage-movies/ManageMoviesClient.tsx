@@ -222,9 +222,6 @@ export default function ManageMoviesClient() {
                             {movie.genres.join(", ")}
                           </span>
                         </div>
-                        <p className="mt-2 text-gray-600 dark:text-gray-400 line-clamp-2">
-                          {movie.description}
-                        </p>
                       </div>
 
                       <div className="flex flex-wrap justify-end gap-2 mt-4">
@@ -324,9 +321,6 @@ export default function ManageMoviesClient() {
                                 {movie.genres.join(", ")}
                               </span>
                             </div>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400 line-clamp-2">
-                              {movie.description}
-                            </p>
                           </div>
 
                           <div className="flex flex-wrap justify-end gap-2 mt-4">
@@ -383,9 +377,6 @@ export default function ManageMoviesClient() {
                                 {movie.genres.join(", ")}
                               </span>
                             </div>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400 line-clamp-2">
-                              {movie.description}
-                            </p>
                           </div>
 
                           <div className="flex flex-wrap justify-end gap-2 mt-4">

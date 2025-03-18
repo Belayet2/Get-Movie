@@ -21,7 +21,6 @@ export default function EditMovieForm({
     rating: movie.rating,
     year: movie.year,
     genres: movie.genres.join(", "),
-    description: movie.description || "",
     director: movie.director || "",
     stars: movie.stars ? movie.stars.join(", ") : "",
     runtime: movie.runtime || "",
@@ -117,7 +116,6 @@ export default function EditMovieForm({
         rating: parseFloat(formData.rating.toString()),
         year: formData.year,
         genres: genresArray,
-        description: formData.description,
         director: formData.director,
         stars: starsArray,
         runtime: formData.runtime,
@@ -395,17 +393,6 @@ export default function EditMovieForm({
               Add Site Information
             </button>
           </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            className="w-full p-2 border rounded-md"
-          ></textarea>
         </div>
 
         <div className="flex justify-end space-x-3">

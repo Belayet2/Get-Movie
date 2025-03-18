@@ -33,7 +33,6 @@ const convertMovie = (doc: QueryDocumentSnapshot<DocumentData>): Movie => {
     rating: data.rating,
     year: data.year,
     genres: data.genres,
-    description: data.description || '',
     director: data.director || '',
     stars: data.stars || [],
     runtime: data.runtime || '',
