@@ -12,14 +12,15 @@ export const metadata: Metadata = {
     "Getmovie is a movie search engine that allows you to search where your favorite movie is streaming.",
   applicationName: "Getmovie",
   icons: {
-    icon: "/images/logo/movie-logo.png",
-    shortcut: "/images/logo/movie-logo.png",
-    apple: "/images/logo/movie-logo.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
     other: {
       rel: "icon",
-      url: "/images/logo/movie-logo.png",
+      url: "/favicon.ico"
     },
   },
+
   openGraph: {
     title: "Getmovie - Find Your Favorite Movies Faster",
     description:
@@ -51,6 +52,8 @@ export default function RootLayout({ children, }: { children: React.ReactNode;})
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
         {/* Google Search Console Verification Meta Tag */}
         <meta name="google-site-verification" content="8AQVBky567b4DPaI3mtffaJiXnr9iPZ3q9TxdCnEtfg" />
         {/* JSON-LD Structured Data for Google Rich Snippets */}
