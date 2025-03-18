@@ -225,20 +225,19 @@ function MoviesContent() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
               Movie Collection
             </span>
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore our curated collection of movies across various genres. Use
-            the filters below to watch your favorite film fast.
+            We have a total of {filteredMovies.length} movies in our collection.
           </p>
         </div>
 
         {/* Search and Filter Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-10 border border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-5 border border-gray-100 dark:border-gray-700 backdrop-blur-sm">
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             {/* Search Input */}
             <div className="flex-1 relative" ref={searchInputRef}>
@@ -276,29 +275,6 @@ function MoviesContent() {
                     setIsFocused(true);
                   }}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  {
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150 transform hover:scale-110 active:scale-95"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  }
-                </div>
               </div>
 
               {/* Quick Recommend Button - Show when there's a search query */}
@@ -437,7 +413,7 @@ function MoviesContent() {
 function MoviesLoading() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6">
         <div className="text-center mb-12">
           <div className="h-10 w-64 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mx-auto mb-4"></div>
           <div className="h-4 w-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mx-auto"></div>

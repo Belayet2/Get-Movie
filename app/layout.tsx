@@ -7,9 +7,10 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Getmovie - Get your favorite movies faster",
+  title: "Getmovie",
   description:
-    "Getmovie is a movie search engine that allows you to find your favorite movies faster.",
+    "Getmovie is a movie search engine that allows you to search where your favorite movie is streaming.",
+  applicationName: "Getmovie",
   icons: {
     icon: "/images/logo/movie-logo.png",
     shortcut: "/images/logo/movie-logo.png",
@@ -24,20 +25,20 @@ export const metadata: Metadata = {
     description:
       "A fast and user-friendly movie listing website with search recommendations.",
     url: "https://getmoviefast.netlify.app/",
-    siteName: "Get Movie",
+    siteName: "Getmovie",
     images: [
       {
         url: "https://getmoviefast.netlify.app/images/logo/movie-logo.png",
         width: 1200,
         height: 630,
-        alt: "Get Movie Logo",
+        alt: "Getmovie Logo",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Getmovie - Get your favorite movies faster",
+    title: "Getmovie",
     description:
       "Find, Watch, and Enjoy the Best Movies with Get Movie!",
     images: [
@@ -60,14 +61,15 @@ export default function RootLayout({ children, }: { children: React.ReactNode;})
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Website",
-              "name": "Get Movie",
+              "@type": "Organization",
+              "name": "Getmovie",
               "url": "https://getmoviefast.netlify.app/",
               "description":
                 "A fast and user-friendly movie listing website with search recommendations.",
+              "logo": "https://getmoviefast.netlify.app/images/logo/movie-logo.png",
               "publisher": {
                 "@type": "Organization",
-                "name": "Get Movie",
+                "name": "Getmovie",
               },
             }),
           }}
