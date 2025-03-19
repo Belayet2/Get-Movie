@@ -238,7 +238,7 @@ function MoviesContent() {
             <div className="flex justify-center items-center text-gray-700 dark:text-white">
               <p className="text-center">
                 Love{" "}
-                <span className="inline-flex items-center justify-center px-3 bg-cyan-300 text-black py-0.5 sm:py-0.5 md:py-1 rounded-lg">
+                <span className="inline-flex items-center justify-center px-3 bg-blue-200 text-black py-0.5 sm:py-0.5 md:py-1 rounded-lg">
                   <RotatingText
                     texts={["Action", "Adventure", "Animation", "Biographical", "Comedy", "Crime", "Historical", "Horror", "Romantic", "Sci-fi", "Science Fiction", "Thriller", "Young Adult"]}
                     staggerFrom="last"
