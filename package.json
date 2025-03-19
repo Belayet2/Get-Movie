@@ -18,6 +18,7 @@
     "critters": "^0.0.23",
     "dotenv": "^16.4.7",
     "firebase": "^11.4.0",
+    "framer-motion": "^12.5.0",
     "js-cookie": "^3.0.5",
     "next": "^14.0.0",
     "postcss": "^8.4.24",

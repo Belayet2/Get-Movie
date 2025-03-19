@@ -9,6 +9,8 @@ import RecommendMovieButton from "../components/RecommendMovieButton";
 import { useMovies } from "../hooks/useMovies";
 import { Movie } from "../types/movie";
 import { Metadata } from "next";
+import GradientText from "../animation/GradientText";
+import CountUp from "../animation/CountUp";
 
 function MoviesContent() {
   const searchParams = useSearchParams();
@@ -226,13 +228,13 @@ function MoviesContent() {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-              Movie Collection
+              <GradientText colors={["#4079ff, #40ffaa, #4079ff"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={filteredMovies.length} separator="," direction="up" duration={1} className="count-up-text"/> Movies Collected</GradientText>
             </span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            We have a total of {filteredMovies.length} movies in our collection.
+          <p className="text-xs sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Find, Watch, and Enjoy the Best Movies with Get Movie!
           </p>
         </div>
 
