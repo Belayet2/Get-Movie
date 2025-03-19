@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import RootLayoutClient from "./components/RootLayoutClient";
 import { Inter } from "next/font/google";
+import ClickSpark from './animation/ClickSpark';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children, }: { children: React.ReactNode;}) {
+export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
     <html lang="en">
       <head>
@@ -81,8 +82,10 @@ export default function RootLayout({ children, }: { children: React.ReactNode;})
         />
       </head>
       <body className={`${inter.className} antialiased`}>
-         <RootLayoutClient>{children}</RootLayoutClient>
-       </body>
+        <ClickSpark sparkColor='#3A1078' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+          <RootLayoutClient>{children}</RootLayoutClient>
+        </ClickSpark>
+      </body>
     </html>
   );
 }

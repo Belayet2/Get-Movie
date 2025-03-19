@@ -32,7 +32,7 @@ export default function Home() {
               Get Your Favorite Movie Fast
             </h1>
             <p className="text-lg sm:text-xl mb-8 text-blue-100">
-              Fastest way to find your favorite movie
+              Find, Watch, and Enjoy the Best Movies with Get Movie!
             </p>
             <Link
               href="/movies"
@@ -138,7 +138,7 @@ export default function Home() {
               Ready to watch your favorite movie?
             </h2>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8">
-              We list the best website to watch your favorite movie fast.
+              We list the best website to watch your favorite movie.
             </p>
             <Link
               href="/movies"

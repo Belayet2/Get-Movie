@@ -11,6 +11,7 @@ import { Movie } from "../types/movie";
 import { Metadata } from "next";
 import GradientText from "../animation/GradientText";
 import CountUp from "../animation/CountUp";
+import RotatingText from "../animation/RotatingText";
 
 function MoviesContent() {
   const searchParams = useSearchParams();
@@ -230,11 +231,29 @@ function MoviesContent() {
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-              <GradientText colors={["#4079ff, #40ffaa, #4079ff"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={filteredMovies.length} separator="," direction="up" duration={1} className="count-up-text"/> Movies Collected</GradientText>
+              <GradientText colors={["#4079ff, #40ffaa, #4079ff"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={allMovies.length} separator="," direction="up" duration={1} className="count-up-text" /> Movies Collected</GradientText>
             </span>
           </h1>
           <p className="text-xs sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Find, Watch, and Enjoy the Best Movies with Get Movie!
+            <div className="flex justify-center items-center text-gray-700 dark:text-white">
+              <p className="text-center">
+                Love{" "}
+                <span className="inline-flex items-center justify-center px-3 bg-cyan-300 text-black py-0.5 sm:py-0.5 md:py-1 rounded-lg">
+                  <RotatingText
+                    texts={["Action", "Adventure", "Animation", "Biographical", "Comedy", "Crime", "Historical", "Horror", "Romantic", "Sci-fi", "Science Fiction", "Thriller", "Young Adult"]}
+                    staggerFrom="last"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.025}
+                    splitLevelClassName="overflow-hidden"
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                    rotationInterval={2000}
+                  />
+                </span>
+                {" "}movies? We've got plenty for you!
+              </p>
+            </div>
           </p>
         </div>
 
@@ -246,9 +265,8 @@ function MoviesContent() {
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg
-                    className={`w-5 h-5 ${
-                      isFocused ? "text-indigo-500" : "text-gray-400"
-                    }`}
+                    className={`w-5 h-5 ${isFocused ? "text-indigo-500" : "text-gray-400"
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -266,10 +284,9 @@ function MoviesContent() {
                   type="text"
                   placeholder="Search by title, or genre ..."
                   className={`w-full pl-12 pr-12 py-4 border-2 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
-                    ${
-                      isFocused
-                        ? "border-indigo-500 shadow-lg dark:border-indigo-400 ring-4 ring-indigo-100 dark:ring-indigo-900/30"
-                        : "border-gray-200 dark:border-gray-700"
+                    ${isFocused
+                      ? "border-indigo-500 shadow-lg dark:border-indigo-400 ring-4 ring-indigo-100 dark:ring-indigo-900/30"
+                      : "border-gray-200 dark:border-gray-700"
                     } transition-all duration-150`}
                   value={searchQuery}
                   onChange={handleSearchChange}
@@ -361,11 +378,10 @@ function MoviesContent() {
                     <button
                       key={number}
                       onClick={() => paginate(number)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        currentPage === number
-                          ? "bg-indigo-600 text-white"
-                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                      }`}
+                      className={`px-4 py-2 rounded-lg transition-colors ${currentPage === number
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                        }`}
                     >
                       {number}
                     </button>
