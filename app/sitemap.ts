@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { MetadataRoute } from "next";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 
@@ -17,47 +17,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export async function GET() {
+// ✅ Default export for Next.js Metadata API
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
+    // ✅ Fetch movie slugs from Firebase
     const moviesCollection = collection(db, "movies");
     const moviesSnapshot = await getDocs(moviesCollection);
 
     const movies = moviesSnapshot.docs.map((doc) => {
       const movieData = doc.data();
-      const lastModified = movieData.updatedAt ? movieData.updatedAt.toDate().toISOString() : new Date().toISOString();
-      return `<url>
-        <loc>https://getmoviefast.netlify.app/movies/${doc.id}</loc>
-        <lastmod>${lastModified}</lastmod>
-      </url>`;
+      return {
+        url: `https://getmoviefast.netlify.app/movies/${doc.id}`,
+        lastModified: movieData.updatedAt
+          ? movieData.updatedAt.toDate()
+          : new Date(), // Handle missing `updatedAt`
+      };
     });
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      <url>
-        <loc>https://getmoviefast.netlify.app/</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
-      </url>
-      <url>
-        <loc>https://getmoviefast.netlify.app/about</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
-      </url>
-      <url>
-        <loc>https://getmoviefast.netlify.app/movies</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
-      </url>
-      ${movies.join("\n")}
-    </urlset>`;
-
-    return new NextResponse(sitemap, {
-      headers: {
-        "Content-Type": "application/xml",
-      },
-    });
+    return [
+      { url: "https://getmoviefast.netlify.app/", lastModified: new Date() },
+      { url: "https://getmoviefast.netlify.app/about", lastModified: new Date() },
+      { url: "https://getmoviefast.netlify.app/movies", lastModified: new Date() },
+      ...movies,
+    ];
   } catch (error) {
     console.error("Error generating sitemap:", error);
-    return new NextResponse("<error>Failed to generate sitemap</error>", {
-      status: 500,
-      headers: { "Content-Type": "application/xml" },
-    });
+    return [];
   }
 }
