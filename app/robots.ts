@@ -5,15 +5,14 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/movies", "/about", "/movies/"],
+        allow: ["/", "/movies", "/movies/*", "/about"], // Allow all movie pages
         disallow: [
           "/admin-login",
           "/admin-control-panel",
-          "/admin-control-panel/",
+          "/admin-control-panel/*", // Properly block all admin routes
           "/admin-control-panel/add-new-movie",
-          "/admin-control-panel/edit-movie/",
-          "/*?*",
-          "/*.json$",
+          "/admin-control-panel/edit-movie/*",
+          "/*.json$", // Blocks JSON API responses
         ],
       },
     ],
