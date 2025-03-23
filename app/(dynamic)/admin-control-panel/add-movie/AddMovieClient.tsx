@@ -6,6 +6,11 @@ import AdminNavbar from "@/app/components/AdminNavbar";
 import { addMovie } from "@/app/services/movieService";
 import { SiteInfo } from "@/app/types/movie";
 
+const RAPIDAPI_KEY = "a0eeb53363mshc82648026a9e3d6p17737cjsn8dc24637a7f3";
+const IMDB_TITLE_URL = "https://imdb8.p.rapidapi.com/title/get-details";
+const IMDB_RATING_URL = "https://imdb8.p.rapidapi.com/title/get-ratings";
+const IMDB_GENRE_URL = "https://imdb8.p.rapidapi.com/title/get-genres";
+
 export default function AddMovieClient() {
   const [title, setTitle] = useState("");
   const [year, setYear] = useState("");
@@ -23,6 +28,7 @@ export default function AddMovieClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [adminKey, setAdminKey] = useState("");
+  const [imdbUrl, setImdbUrl] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +38,55 @@ export default function AddMovieClient() {
       return;
     }
   }, [router]);
+
+  useEffect(() => {
+    if (imdbUrl.trim()) {
+      const imdbIdMatch = imdbUrl.match(/tt\d+/);
+      if (imdbIdMatch) {
+        fetchMovieDetails(imdbIdMatch[0]);
+      }
+    }
+  }, [imdbUrl]);
+
+  const fetchMovieDetails = async (imdbId: string) => {
+    try {
+      const [titleResponse, ratingResponse, genresResponse] = await Promise.all([
+        fetch(`${IMDB_TITLE_URL}?tconst=${imdbId}`, {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": RAPIDAPI_KEY,
+            "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
+          }
+        }),
+        fetch(`${IMDB_RATING_URL}?tconst=${imdbId}`, {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": RAPIDAPI_KEY,
+            "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
+          }
+        }),
+        fetch(`${IMDB_GENRE_URL}?tconst=${imdbId}`, {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": RAPIDAPI_KEY,
+            "X-RapidAPI-Host": "imdb8.p.rapidapi.com"
+          }
+        })
+      ]);
+      
+      const titleData = await titleResponse.json();
+      const ratingData = await ratingResponse.json();
+      const genresData = await genresResponse.json();
+      
+      setTitle(titleData.title || "");
+      setYear(titleData.year || "");
+      setPosterPath(titleData.image?.url || "");
+      setRating(ratingData.rating || "N/A");
+      setGenres(genresData || []);
+    } catch (error) {
+      console.error("Error fetching movie details from IMDb API:", error);
+    }
+  };
 
   const handleAddGenre = () => {
     if (genreInput.trim() && !genres.includes(genreInput.trim())) {
@@ -138,6 +193,20 @@ export default function AddMovieClient() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* IMDb URL Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  IMDb URL
+                </label>
+                <input
+                  type="url"
+                  value={imdbUrl}
+                  onChange={(e) => setImdbUrl(e.target.value)}
+                  className="w-full px-3 sm:px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Enter IMDb URL"
+                />
+              </div>
+
               {/* Admin Key Input */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
