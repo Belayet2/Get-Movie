@@ -2,7 +2,7 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { NextResponse } from "next/server";
 
-// ✅ Firebase Config
+// Firebase Config
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -13,16 +13,18 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// ✅ Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ✅ Sitemap Generator
+// Sitemap Generator
 export async function GET() {
   try {
+    // Fetch movies from Firestore
     const moviesCollection = collection(db, "movies");
     const moviesSnapshot = await getDocs(moviesCollection);
 
+    // Map movies to sitemap entries
     const movies = moviesSnapshot.docs.map((doc) => {
       const movieData = doc.data();
       return {
@@ -31,31 +33,33 @@ export async function GET() {
       };
     });
 
+    // Generate the sitemap XML
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url>
-          <loc>https://getmoviefast.netlify.app/</loc>
-          <lastmod>${new Date().toISOString()}</lastmod>
-        </url>
-        <url>
-          <loc>https://getmoviefast.netlify.app/about</loc>
-          <lastmod>${new Date().toISOString()}</lastmod>
-        </url>
-        <url>
-          <loc>https://getmoviefast.netlify.app/movies</loc>
-          <lastmod>${new Date().toISOString()}</lastmod>
-        </url>
-        ${movies
-          .map(
-            (movie) => `
-          <url>
-            <loc>${movie.loc}</loc>
-            <lastmod>${movie.lastmod}</lastmod>
-          </url>`
-          )
-          .join("")}
-      </urlset>`;
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://getmoviefast.netlify.app/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </url>
+  <url>
+    <loc>https://getmoviefast.netlify.app/about</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </url>
+  <url>
+    <loc>https://getmoviefast.netlify.app/movies</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+  </url>
+  ${movies
+    .map(
+      (movie) => `
+  <url>
+    <loc>${movie.loc}</loc>
+    <lastmod>${movie.lastmod}</lastmod>
+  </url>`
+    )
+    .join("")}
+</urlset>`;
 
+    // Return the sitemap with the correct Content-Type header
     return new NextResponse(sitemap, {
       headers: {
         "Content-Type": "application/xml",
