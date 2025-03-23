@@ -49,14 +49,14 @@ export async function GET() {
     <lastmod>${new Date().toISOString()}</lastmod>
   </url>
   ${movies
-    .map(
-      (movie) => `
+        .map(
+          (movie) => `
   <url>
     <loc>${movie.loc}</loc>
     <lastmod>${movie.lastmod}</lastmod>
   </url>`
-    )
-    .join("")}
+        )
+        .join("")}
 </urlset>`;
 
     // Return the sitemap with the correct Content-Type header
