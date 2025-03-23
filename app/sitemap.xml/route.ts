@@ -33,13 +33,25 @@ export async function GET() {
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url><loc>https://getmoviefast.netlify.app/</loc><lastmod>${new Date().toISOString()}</lastmod></url>
-        <url><loc>https://getmoviefast.netlify.app/about</loc><lastmod>${new Date().toISOString()}</lastmod></url>
-        <url><loc>https://getmoviefast.netlify.app/movies</loc><lastmod>${new Date().toISOString()}</lastmod></url>
+        <url>
+          <loc>https://getmoviefast.netlify.app/</loc>
+          <lastmod>${new Date().toISOString()}</lastmod>
+        </url>
+        <url>
+          <loc>https://getmoviefast.netlify.app/about</loc>
+          <lastmod>${new Date().toISOString()}</lastmod>
+        </url>
+        <url>
+          <loc>https://getmoviefast.netlify.app/movies</loc>
+          <lastmod>${new Date().toISOString()}</lastmod>
+        </url>
         ${movies
           .map(
-            (movie) =>
-              `<url><loc>${movie.loc}</loc><lastmod>${movie.lastmod}</lastmod></url>`
+            (movie) => `
+          <url>
+            <loc>${movie.loc}</loc>
+            <lastmod>${movie.lastmod}</lastmod>
+          </url>`
           )
           .join("")}
       </urlset>`;
@@ -51,6 +63,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error generating sitemap:", error);
-    return new NextResponse("", { status: 500 });
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
