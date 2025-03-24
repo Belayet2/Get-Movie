@@ -107,8 +107,8 @@ function MoviesContent() {
             (movie) =>
               movie.id === numericValue ||
               movie.id.toString().includes(numericMatch[0]) ||
-              movie.title.toLowerCase().includes(query) ||
-              movie.year.includes(numericMatch[0])
+              movie.title.toLowerCase().includes(query) // ||
+              // movie.year.includes(numericMatch[0])
           );
         }
       } else {

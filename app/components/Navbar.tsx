@@ -5,10 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { getAllMovies } from "../services/movieService";
+import { useMovies } from "../hooks/useMovies";
 import MovieRecommendations from "./MovieRecommendations";
 import { Movie } from "../types/movie";
+import RecommendMovieButton from "./RecommendMovieButton";
 
 export default function Navbar() {
+  const { movies: allMovies, error, refetch } = useMovies();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -203,33 +206,30 @@ export default function Navbar() {
             <div className="flex items-center space-x-6">
               <Link
                 href="/"
-                className={`${
-                  isActive("/")
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                } 
+                className={`${isActive("/")
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  } 
                   px-3 py-2 rounded-md font-medium`}
               >
                 Home
               </Link>
               <Link
                 href="/movies"
-                className={`${
-                  isActive("/movies")
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                } 
+                className={`${isActive("/movies")
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  } 
                   px-3 py-2 rounded-md font-medium`}
               >
                 Movies
               </Link>
               <Link
                 href="/about/"
-                className={`${
-                  isActive("/about") || isActive("/about/")
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                } 
+                className={`${isActive("/about") || isActive("/about/")
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  } 
                   px-3 py-2 rounded-md font-medium`}
               >
                 About
@@ -244,10 +244,9 @@ export default function Navbar() {
                     type="text"
                     placeholder="Search movies..."
                     className={`w-80 pl-10 pr-10 py-2 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
-                      ${
-                        isFocused
-                          ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
-                          : "border-gray-200 dark:border-gray-700"
+                      ${isFocused
+                        ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
+                        : "border-gray-200 dark:border-gray-700"
                       }`}
                     value={searchQuery}
                     onChange={handleSearchChange}
@@ -259,9 +258,8 @@ export default function Navbar() {
                   />
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg
-                      className={`w-5 h-5 ${
-                        isFocused ? "text-blue-500" : "text-gray-400"
-                      }`}
+                      className={`w-5 h-5 ${isFocused ? "text-blue-500" : "text-gray-400"
+                        }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -323,6 +321,14 @@ export default function Navbar() {
                   {/* Movie Recommendations */}
                   {showRecommendations && !isLoading && (
                     <div className="absolute mt-2 w-[550px] right-0 transform-gpu transition-all duration-200 ease-in-out">
+                      {searchQuery.trim().length > 0 && !isLoading && (
+                        <div className="mt-3">
+                          <RecommendMovieButton
+                            searchQuery={searchQuery}
+                            movies={allMovies}
+                          />
+                        </div>
+                      )}
                       <MovieRecommendations
                         searchQuery={searchQuery}
                         movies={movies}
@@ -412,10 +418,9 @@ export default function Navbar() {
                 type="text"
                 placeholder="Search movies..."
                 className={`w-full pl-10 pr-10 py-3 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
-                  ${
-                    isFocused
-                      ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
-                      : "border-gray-200 dark:border-gray-700"
+                  ${isFocused
+                    ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
+                    : "border-gray-200 dark:border-gray-700"
                   }`}
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -426,9 +431,8 @@ export default function Navbar() {
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
-                  className={`w-5 h-5 ${
-                    isFocused ? "text-blue-500" : "text-gray-400"
-                  }`}
+                  className={`w-5 h-5 ${isFocused ? "text-blue-500" : "text-gray-400"
+                    }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -483,11 +487,10 @@ export default function Navbar() {
             <div className="space-y-2">
               <Link
                 href="/"
-                className={`${
-                  isActive("/")
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                } 
+                className={`${isActive("/")
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  } 
                   block px-4 py-3 rounded-lg font-medium text-lg`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -495,11 +498,10 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/movies"
-                className={`${
-                  isActive("/movies")
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                } 
+                className={`${isActive("/movies")
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  } 
                   block px-4 py-3 rounded-lg font-medium text-lg`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -507,11 +509,10 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/about/"
-                className={`${
-                  isActive("/about") || isActive("/about/")
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                } 
+                className={`${isActive("/about") || isActive("/about/")
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  } 
                   block px-4 py-3 rounded-lg font-medium text-lg`}
                 onClick={() => setIsMenuOpen(false)}
               >

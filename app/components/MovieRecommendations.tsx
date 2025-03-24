@@ -85,9 +85,9 @@ export default function MovieRecommendations({
         }
 
         // Year match
-        if (movie.year && movie.year.includes(numericMatch[0])) {
-          score += 50;
-        }
+        // if (movie.year && movie.year.includes(numericMatch[0])) {
+        //   score += 50;
+        // }
       }
 
       // Check for word boundary matches (more precise than simple includes)
@@ -393,10 +393,10 @@ export default function MovieRecommendations({
             No Movies Found
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            We couldn't find "{searchQuery}" in our database.
+            We couldn't find "{searchQuery}" in our collection.
           </p>
 
-          {recommendSuccess ? (
+          {/* {recommendSuccess ? (
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
               <p className="text-green-600 dark:text-green-400 font-medium">
                 Thank you! We've added your movie recommendation to our pending
@@ -459,7 +459,7 @@ export default function MovieRecommendations({
                 </span>
               )}
             </button>
-          )}
+          )} */}
         </div>
       </div>
     );
