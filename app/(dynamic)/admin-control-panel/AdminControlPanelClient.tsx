@@ -178,12 +178,12 @@ export default function AdminControlPanelClient() {
                   </p>
                 </div>
                 <div className="mt-4">
-                  <button
-                    className="inline-block w-full px-4 py-2 bg-purple-600 text-white text-center rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                    disabled
-                  >
-                    Coming Soon
-                  </button>
+                  <Link href="/admin-control-panel/analytics/">
+                    <button
+                      className="inline-block w-full px-4 py-2 bg-purple-600 text-white text-center rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                      Analytic Movies
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

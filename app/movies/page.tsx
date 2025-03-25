@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import GradientText from "../animation/GradientText";
 import CountUp from "../animation/CountUp";
 import RotatingText from "../animation/RotatingText";
+import { incrementMoviePoints } from "../services/movieService";
 
 function MoviesContent() {
   const searchParams = useSearchParams();
@@ -63,10 +64,74 @@ function MoviesContent() {
   }, [initialSearchQuery]);
 
   // Filter movies based on selected genres and search query
+  // useEffect(() => {
+  //   if (allMovies.length === 0) return;
+
+  //   let result = allMovies;
+
+  //   // Filter by selected genres
+  //   if (selectedGenres.length > 0) {
+  //     result = result.filter((movie) =>
+  //       selectedGenres.some((genre) => movie.genres.includes(genre))
+  //     );
+  //   }
+
+  //   // Filter by search query
+  //   if (searchQuery) {
+  //     const query = searchQuery.toLowerCase().trim();
+
+  //     // Check for numeric patterns in the search query
+  //     const numericMatch = query.match(/(\d+)/);
+  //     const hasNumericPart = numericMatch !== null;
+
+  //     if (hasNumericPart) {
+  //       const numericValue = parseInt(numericMatch[0]);
+
+  //       // Special case for "movie X" format
+  //       if (query.includes("movie") && numericMatch) {
+  //         const exactIdMatch = result.filter(
+  //           (movie) => movie.id === numericValue
+  //         );
+  //         if (exactIdMatch.length > 0) {
+  //           result = exactIdMatch;
+  //         } else {
+  //           // If no exact match, look for movies with IDs containing the number
+  //           result = result.filter(
+  //             (movie) =>
+  //               movie.id.toString().includes(numericMatch[0]) ||
+  //               movie.title.toLowerCase().includes(query)
+  //           );
+  //         }
+  //       } else {
+  //         // General numeric search
+  //         result = result.filter(
+  //           (movie) =>
+  //             movie.id === numericValue ||
+  //             movie.id.toString().includes(numericMatch[0]) ||
+  //             movie.title.toLowerCase().includes(query) // ||
+  //           // movie.year.includes(numericMatch[0])
+  //         );
+  //       }
+  //     } else {
+  //       // Standard text search
+  //       result = result.filter(
+  //         (movie) =>
+  //           movie.title.toLowerCase().includes(query) ||
+  //           movie.genres.some((genre) => genre.toLowerCase().includes(query))
+  //       );
+  //     }
+  //   }
+
+  //   setFilteredMovies(result);
+  //   setCurrentPage(1); // Reset to first page when filters change
+  // }, [selectedGenres, searchQuery, allMovies]);
+
+
+  // In your MoviesContent component, update the useEffect that filters movies:
   useEffect(() => {
     if (allMovies.length === 0) return;
 
-    let result = allMovies;
+    let result = [...allMovies]; // Create a copy to avoid mutating the original array
 
     // Filter by selected genres
     if (selectedGenres.length > 0) {
@@ -75,51 +140,22 @@ function MoviesContent() {
       );
     }
 
-    // Filter by search query
+    // Filter by search query (keep your existing search logic)
     if (searchQuery) {
-      const query = searchQuery.toLowerCase().trim();
-
-      // Check for numeric patterns in the search query
-      const numericMatch = query.match(/(\d+)/);
-      const hasNumericPart = numericMatch !== null;
-
-      if (hasNumericPart) {
-        const numericValue = parseInt(numericMatch[0]);
-
-        // Special case for "movie X" format
-        if (query.includes("movie") && numericMatch) {
-          const exactIdMatch = result.filter(
-            (movie) => movie.id === numericValue
-          );
-          if (exactIdMatch.length > 0) {
-            result = exactIdMatch;
-          } else {
-            // If no exact match, look for movies with IDs containing the number
-            result = result.filter(
-              (movie) =>
-                movie.id.toString().includes(numericMatch[0]) ||
-                movie.title.toLowerCase().includes(query)
-            );
-          }
-        } else {
-          // General numeric search
-          result = result.filter(
-            (movie) =>
-              movie.id === numericValue ||
-              movie.id.toString().includes(numericMatch[0]) ||
-              movie.title.toLowerCase().includes(query) // ||
-              // movie.year.includes(numericMatch[0])
-          );
-        }
-      } else {
-        // Standard text search
-        result = result.filter(
-          (movie) =>
-            movie.title.toLowerCase().includes(query) ||
-            movie.genres.some((genre) => genre.toLowerCase().includes(query))
-        );
-      }
+      // ... your existing search logic ...
     }
+
+    // Sort by points (descending) AND order (ascending) simultaneously
+    // In your sorting logic:
+    result.sort((a, b) => {
+      const pointsDiff = (b.points || 0) - (a.points || 0);
+      if (pointsDiff !== 0) return pointsDiff;
+
+      // Handle undefined orders by treating them as Infinity (will appear last)
+      const orderA = a.order !== undefined ? a.order : Infinity;
+      const orderB = b.order !== undefined ? b.order : Infinity;
+      return orderA - orderB;
+    });
 
     setFilteredMovies(result);
     setCurrentPage(1); // Reset to first page when filters change
@@ -175,15 +211,20 @@ function MoviesContent() {
   }, []);
 
   // Handle movie selection from recommendations
-  const handleSelectMovie = (movie: Movie) => {
+  // In page.tsx, update handleSelectMovie
+  const handleSelectMovie = async (movie: Movie) => {
     setSearchQuery(movie.title);
     setShowRecommendations(false);
 
-    // Navigate to the movie detail page using the slug
+    try {
+      await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
+    } catch (error) {
+      console.error("Error tracking movie click:", error);
+    }
+
     if (movie.slug) {
       window.location.href = `/movies/${movie.slug}`;
     } else {
-      // If no slug is available, just select the genres
       setSelectedGenres(movie.genres);
     }
   };
@@ -234,7 +275,7 @@ function MoviesContent() {
               <GradientText colors={["#4079ff, #40ffaa, #4079ff"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={allMovies.length} separator="," direction="up" duration={1} className="count-up-text" /> Movies Collected</GradientText>
             </span>
           </h1>
-          <p className="text-xs sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <div className="text-xs sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             <div className="flex justify-center items-center text-gray-700 dark:text-white">
               <p className="text-center">
                 Love{" "}
@@ -254,7 +295,7 @@ function MoviesContent() {
                 {" "}movies? We've got plenty for you!
               </p>
             </div>
-          </p>
+          </div>
         </div>
 
         {/* Search and Filter Section */}
@@ -359,13 +400,14 @@ function MoviesContent() {
         {currentMovies.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {currentMovies.map((movie) => (
+              {currentMovies.map((movie, index) => (
                 <MovieCard
                   key={movie.id}
                   movie={movie}
                   isGridView={true}
                   isActive={activeCardTitle === movie.title}
                   onClick={() => handleCardClick(movie.title)}
+                  order={movie.order} // Pass the order to MovieCard
                 />
               ))}
             </div>

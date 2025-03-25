@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { getAllMovies } from "../services/movieService";
+import { getAllMovies, incrementMoviePoints } from "../services/movieService";
 import { useMovies } from "../hooks/useMovies";
 import MovieRecommendations from "./MovieRecommendations";
 import { Movie } from "../types/movie";
@@ -97,18 +97,23 @@ export default function Navbar() {
   };
 
   // Handle movie selection from recommendations
-  const handleSelectMovie = (movie: Movie) => {
+  // In Navbar.tsx, update handleSelectMovie
+  const handleSelectMovie = async (movie: Movie) => {
     setSearchQuery("");
     setShowRecommendations(false);
     setShowSearch(false);
     setIsFocused(false);
     setIsMenuOpen(false);
 
-    // Navigate to the movie detail page using the slug
+    try {
+      await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
+    } catch (error) {
+      console.error("Error tracking movie click:", error);
+    }
+
     if (movie.slug) {
       router.push(`/movies/${movie.slug}`);
     } else {
-      // Fallback to search if no slug is available
       router.push(`/movies?search=${encodeURIComponent(movie.title)}`);
     }
   };

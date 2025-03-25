@@ -57,33 +57,33 @@ export default function AdminNavbar() {
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
                 href="/admin-control-panel"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  pathname === "/admin-control-panel"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${pathname === "/admin-control-panel"
                     ? "border-indigo-500 text-gray-900 dark:text-white"
                     : "border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
-                }`}
+                  }`}
               >
                 Home
               </Link>
               <Link
                 href="/admin-control-panel/manage-movies"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  pathname === "/admin-control-panel/manage-movies"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${pathname === "/admin-control-panel/manage-movies"
                     ? "border-indigo-500 text-gray-900 dark:text-white"
                     : "border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
-                }`}
+                  }`}
               >
                 Manage Movies
               </Link>
               <Link
                 href="/admin-control-panel/add-movie"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  pathname === "/admin-control-panel/add-movie"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${pathname === "/admin-control-panel/add-movie"
                     ? "border-indigo-500 text-gray-900 dark:text-white"
                     : "border-transparent text-gray-500 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
-                }`}
+                  }`}
               >
                 Add Movie
+              </Link>
+              <Link href="/admin-control-panel/analytics" className="text-gray-500 dark:text-gray-300 hover:text-indigo-600 hover:border-gray-300 dark:hover:border-gray-600">
+                Analytics
               </Link>
             </div>
           </div>
@@ -150,31 +150,28 @@ export default function AdminNavbar() {
         <div className="pt-2 pb-3 space-y-1 border-t border-gray-200 dark:border-gray-700">
           <Link
             href="/admin-control-panel"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-              pathname === "/admin-control-panel"
+            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${pathname === "/admin-control-panel"
                 ? "border-indigo-500 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20"
                 : "border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
-            }`}
+              }`}
           >
             Home
           </Link>
           <Link
             href="/admin-control-panel/manage-movies"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-              pathname === "/admin-control-panel/manage-movies"
+            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${pathname === "/admin-control-panel/manage-movies"
                 ? "border-indigo-500 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20"
                 : "border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
-            }`}
+              }`}
           >
             Manage Movies
           </Link>
           <Link
             href="/admin-control-panel/add-movie"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-              pathname === "/admin-control-panel/add-movie"
+            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${pathname === "/admin-control-panel/add-movie"
                 ? "border-indigo-500 text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/20"
                 : "border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
-            }`}
+              }`}
           >
             Add Movie
           </Link>

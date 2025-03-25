@@ -14,6 +14,9 @@ export interface Movie {
   status?: 'live' | 'pending';
   pendingType?: 'admin' | 'user';
   key?: string; // New field for movie key
+  lastClicked?: Date | null;
+  points?: number;
+  order?: number;
 }
 
 // Interface for site information
@@ -22,3 +25,10 @@ export interface SiteInfo {
   siteLink: string;
   tags: string[];
 } 
+
+export interface MovieAnalytics {
+  id: string;
+  points: number;
+  lastClicked: Date;
+  title?: string;
+}
