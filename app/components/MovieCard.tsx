@@ -69,22 +69,7 @@ export default function MovieCard({
 
   const handleGetLinks = async (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      // Navigate immediately
-      window.location.href = `/movies/${slug}`;
-
-      // Then update points in the background
-      setTimeout(async () => {
-        try {
-          await incrementMoviePoints(movie.firestoreId || slug);
-        } catch (error) {
-          console.error("Failed to track click:", error);
-        }
-      }, 0);
-    } catch (error) {
-      console.error("Navigation error:", error);
-      window.location.href = `/movies/${slug}`;
-    }
+    window.location.href = `/movies/${slug}`;
   };
 
   // If not mounted yet (server-side), render a simpler version

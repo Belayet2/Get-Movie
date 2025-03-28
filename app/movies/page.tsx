@@ -212,15 +212,10 @@ function MoviesContent() {
 
   // Handle movie selection from recommendations
   // In page.tsx, update handleSelectMovie
+  // app/movies/page.tsx
   const handleSelectMovie = async (movie: Movie) => {
     setSearchQuery(movie.title);
     setShowRecommendations(false);
-
-    try {
-      await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
-    } catch (error) {
-      console.error("Error tracking movie click:", error);
-    }
 
     if (movie.slug) {
       window.location.href = `/movies/${movie.slug}`;

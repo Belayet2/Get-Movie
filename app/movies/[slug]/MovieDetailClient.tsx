@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getMovieBySlug } from "../../services/movieService";
+import { getMovieBySlug, incrementMoviePoints } from "../../services/movieService";
 import { Movie } from "../../types/movie";
 
 // Calculate color based on rating
@@ -70,6 +70,11 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
         if (movieData) {
           console.log("Movie found:", movieData.title);
           setMovie(movieData);
+          try {
+            await incrementMoviePoints(movieData.firestoreId || actualSlug);
+          } catch (error) {
+            console.error("Failed to track visit:", error);
+          }
         } else {
           console.log("Movie not found for slug:", actualSlug);
           setError("Movie not found");
@@ -260,11 +265,10 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
                           {site.siteName}
                         </h3>
                         <a
-                          href={`${
-                            site.siteLink.startsWith("http")
+                          href={`${site.siteLink.startsWith("http")
                               ? site.siteLink
                               : `https://${site.siteLink}`
-                          }`}
+                            }`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
