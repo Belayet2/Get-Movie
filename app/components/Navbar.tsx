@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { getAllMovies, incrementMoviePoints } from "../services/movieService";
+import { getAllMovies } from "../services/movieService";
 import { useMovies } from "../hooks/useMovies";
 import MovieRecommendations from "./MovieRecommendations";
 import { Movie } from "../types/movie";
@@ -104,12 +104,6 @@ export default function Navbar() {
     setShowSearch(false);
     setIsFocused(false);
     setIsMenuOpen(false);
-
-    // try {
-    //   await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
-    // } catch (error) {
-    //   console.error("Error tracking movie click:", error);
-    // }
 
     if (movie.slug) {
       router.push(`/movies/${movie.slug}`);
