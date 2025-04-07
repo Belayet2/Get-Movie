@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getMovieBySlug, getAllMovieSlugs, incrementMoviePoints, createSlug } from "../../services/movieService";
+import { getMovieBySlug, getAllMovieSlugs, createSlug } from "../../services/movieService";
 import { Movie } from "../../types/movie";
 import MovieDetailClient from "./MovieDetailClient";
 
@@ -99,8 +99,6 @@ export default async function MovieDetailPage({
 
     // If movie is found, render the server component
     if (movie) {
-      // incrementMoviePoints(movie.firestoreId || createSlug(movie.title))
-      //   .catch(error => console.error("Failed to track visit:", error));
       return (
         <div className="container mx-auto px-4 py-8">
           <Link
