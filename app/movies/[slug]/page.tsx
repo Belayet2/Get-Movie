@@ -99,8 +99,8 @@ export default async function MovieDetailPage({
 
     // If movie is found, render the server component
     if (movie) {
-      incrementMoviePoints(movie.firestoreId || createSlug(movie.title))
-        .catch(error => console.error("Failed to track visit:", error));
+      // incrementMoviePoints(movie.firestoreId || createSlug(movie.title))
+      //   .catch(error => console.error("Failed to track visit:", error));
       return (
         <div className="container mx-auto px-4 py-8">
           <Link

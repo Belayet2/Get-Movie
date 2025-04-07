@@ -105,11 +105,11 @@ export default function Navbar() {
     setIsFocused(false);
     setIsMenuOpen(false);
 
-    try {
-      await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
-    } catch (error) {
-      console.error("Error tracking movie click:", error);
-    }
+    // try {
+    //   await incrementMoviePoints(movie.firestoreId || movie.id?.toString() || movie.slug || '');
+    // } catch (error) {
+    //   console.error("Error tracking movie click:", error);
+    // }
 
     if (movie.slug) {
       router.push(`/movies/${movie.slug}`);

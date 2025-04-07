@@ -42,8 +42,6 @@ const convertMovie = (doc: QueryDocumentSnapshot<DocumentData>): Movie => {
     siteInfo: data.siteInfo || [],
     status: data.status || 'pending',
     pendingType: data.pendingType || 'admin',
-    points: data.points || 0,
-    lastClicked: data.lastClicked?.toDate() || null,
   };
 };
 
@@ -399,91 +397,6 @@ export const saveTrendingMovies = async (movies: Movie[]): Promise<void> => {
     }
   } catch (error) {
     console.error('Error saving trending movies:', error);
-    throw error;
-  }
-};
-
-// Track movie points when "Get Links" is clicked
-// movieService.ts
-export const incrementMoviePoints = async (movieId: string): Promise<void> => {
-  try {
-    if (!movieId) {
-      console.error("No movieId provided");
-      return;
-    }
-
-    // Update analytics collection
-    const movieAnalyticsRef = doc(db, 'movieAnalytics', movieId);
-    await setDoc(movieAnalyticsRef, {
-      points: increment(1),
-      lastClicked: serverTimestamp(),
-    }, { merge: true });
-
-    // Also update the movie document itself
-    const movieRef = doc(db, 'movies', movieId);
-    await updateDoc(movieRef, {
-      points: increment(1),
-      lastClicked: serverTimestamp()
-    });
-
-    console.log(`Points incremented for movie ${movieId}`);
-  } catch (error) {
-    console.error(`Error incrementing points for movie ${movieId}:`, error);
-    throw error;
-  }
-};
-
-// Get all movie analytics data
-export const getMovieAnalytics = async (): Promise<Array<{
-  id: string;
-  points: number;
-  lastClicked: Date;
-  title?: string;
-}>> => {
-  try {
-    // Get all analytics data
-    const analyticsSnapshot = await getDocs(collection(db, 'movieAnalytics'));
-    const analyticsData = analyticsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      points: doc.data().points || 0,
-      lastClicked: doc.data().lastClicked?.toDate() || new Date(0),
-    }));
-
-    // Get all movies to match titles
-    const movies = await getAllMovies();
-
-    // Enrich analytics data with movie titles
-    return analyticsData.map(item => {
-      const movie = movies.find(m => m.firestoreId === item.id);
-      return {
-        ...item,
-        title: movie?.title || 'Unknown Movie',
-      };
-    }).sort((a, b) => b.points - a.points); // Sort by points descending
-  } catch (error) {
-    console.error('Error getting movie analytics:', error);
-    throw error;
-  }
-};
-
-// Get analytics for a specific movie
-export const getMovieAnalyticsById = async (movieId: string): Promise<{
-  points: number;
-  lastClicked: Date;
-} | null> => {
-  try {
-    const docRef = doc(db, 'movieAnalytics', movieId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      return {
-        points: docSnap.data().points || 0,
-        lastClicked: docSnap.data().lastClicked?.toDate() || new Date(0),
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error(`Error getting analytics for movie ${movieId}:`, error);
     throw error;
   }
 };

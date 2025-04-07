@@ -12,7 +12,6 @@ import { Metadata } from "next";
 import GradientText from "../animation/GradientText";
 import CountUp from "../animation/CountUp";
 import RotatingText from "../animation/RotatingText";
-import { incrementMoviePoints } from "../services/movieService";
 
 function MoviesContent() {
   const searchParams = useSearchParams();

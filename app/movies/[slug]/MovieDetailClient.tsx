@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getMovieBySlug, incrementMoviePoints } from "../../services/movieService";
+import { getMovieBySlug } from "../../services/movieService";
 import { Movie } from "../../types/movie";
 
 // Calculate color based on rating
@@ -39,17 +39,10 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    // Clear any redirect flags from sessionStorage
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("redirected");
-      console.log("Current URL path:", window.location.pathname);
-    }
-
     const fetchMovie = async () => {
       try {
         setLoading(true);
 
-        // Get the actual slug from the URL if needed
         let actualSlug = slug;
         if (typeof window !== "undefined") {
           const pathParts = window.location.pathname.split("/");
@@ -59,31 +52,14 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
           }
         }
 
-        console.log("Client-side fetching movie with slug:", actualSlug);
-
-        // Add a small delay to ensure Firebase connection is established
-        // This can help with Netlify's cold starts
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
         const movieData = await getMovieBySlug(actualSlug);
 
         if (movieData) {
-          console.log("Movie found:", movieData.title);
           setMovie(movieData);
-          try {
-            await incrementMoviePoints(movieData.firestoreId || actualSlug);
-          } catch (error) {
-            console.error("Failed to track visit:", error);
-          }
         } else {
-          console.log("Movie not found for slug:", actualSlug);
           setError("Movie not found");
-
-          // If we've retried less than 3 times and we're on Netlify (not localhost)
           if (retryCount < 3 && window.location.hostname !== "localhost") {
-            console.log(`Retrying fetch (${retryCount + 1}/3)...`);
             setRetryCount((prev) => prev + 1);
-            // Wait a bit longer before retrying
             setTimeout(() => {
               setLoading(true);
               setError(null);
@@ -93,12 +69,8 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
       } catch (err) {
         console.error("Error fetching movie:", err);
         setError("Error loading movie details");
-
-        // If we've retried less than 3 times and we're on Netlify (not localhost)
         if (retryCount < 3 && window.location.hostname !== "localhost") {
-          console.log(`Retrying after error (${retryCount + 1}/3)...`);
           setRetryCount((prev) => prev + 1);
-          // Wait a bit longer before retrying
           setTimeout(() => {
             setLoading(true);
             setError(null);
@@ -266,8 +238,8 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
                         </h3>
                         <a
                           href={`${site.siteLink.startsWith("http")
-                              ? site.siteLink
-                              : `https://${site.siteLink}`
+                            ? site.siteLink
+                            : `https://${site.siteLink}`
                             }`}
                           target="_blank"
                           rel="noopener noreferrer"
