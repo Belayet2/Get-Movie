@@ -50,6 +50,26 @@ export async function generateMetadata({
 
     return {
       title: `${movie.title} (${movie.year}) - Getmovie`,
+      description: `Watch ${movie.title} (${movie.year}) online. Get details, ratings, and streaming information for ${movie.title} on Getmovie.`,
+      keywords: `${movie.title}, ${movie.title} movie, watch ${movie.title}, ${movie.title} ${movie.year}, ${movie.genres.join(', ')}, ${movie.director || ''}, streaming ${movie.title}, Getmovie`,
+      openGraph: {
+        title: `${movie.title} (${movie.year}) - Getmovie`,
+        description: `Watch ${movie.title} (${movie.year}) online. Get details, ratings, and streaming information for ${movie.title} on Getmovie.`,
+        images: [
+          {
+            url: movie.posterPath || 'https://getmoviefast.netlify.app/images/logo/movie-logo.png',
+            width: 1200,
+            height: 630,
+            alt: `${movie.title} Poster`,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${movie.title} (${movie.year}) - Getmovie`,
+        description: `Watch ${movie.title} (${movie.year}) online. Get details, ratings, and streaming information for ${movie.title} on Getmovie.`,
+        images: [movie.posterPath || 'https://getmoviefast.netlify.app/images/logo/movie-logo.png'],
+      },
     };
   } catch (error) {
     console.error("Error generating metadata:", error);

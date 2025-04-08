@@ -2,7 +2,26 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About - Getmovie",
-  description: "Learn More About Getmovie.",
+  description: "Learn more about Getmovie, our mission, and how we help movie enthusiasts find and enjoy their favorite films. Discover the story behind our platform.",
+  keywords: "about Getmovie, Getmovie mission, movie platform, movie search service, find movies online, Getmovie team, movie enthusiasts, movie discovery",
+  openGraph: {
+    title: "About - Getmovie",
+    description: "Learn more about Getmovie, our mission, and how we help movie enthusiasts find and enjoy their favorite films.",
+    images: [
+      {
+        url: "https://getmoviefast.netlify.app/images/logo/movie-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Getmovie Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About - Getmovie",
+    description: "Learn more about Getmovie, our mission, and how we help movie enthusiasts find and enjoy their favorite films.",
+    images: ["https://getmoviefast.netlify.app/images/logo/movie-logo.png"],
+  },
 };
 
 export default function AboutPage() {

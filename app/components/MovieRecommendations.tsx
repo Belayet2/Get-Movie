@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Movie } from "../types/movie";
-import Link from "next/link";
 import Image from "next/image";
 import { addMovie } from "../services/movieService";
 
@@ -59,8 +58,11 @@ export default function MovieRecommendations({
         score += 80;
       }
       // Title contains query as a whole word
-      else if (new RegExp(`\\b${query}\\b`, "i").test(movieTitle)) {
-        score += 60;
+      else if (query.length > 0 && /^[a-zA-Z0-9]+$/.test(query)) {
+        // Only apply word boundary regex for alphanumeric queries
+        if (new RegExp(`\\b${query}\\b`, "i").test(movieTitle)) {
+          score += 60;
+        }
       }
       // Title contains query
       else if (movieTitle.includes(query)) {
@@ -95,7 +97,7 @@ export default function MovieRecommendations({
       for (const word of words) {
         if (word.length > 1) {
           // Match at word boundaries
-          const wordBoundaryRegex = new RegExp(`\\b${word}\\b`, "i");
+          const wordBoundaryRegex = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, "i");
           if (wordBoundaryRegex.test(movieTitle)) {
             score += 50;
           }

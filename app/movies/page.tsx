@@ -8,7 +8,6 @@ import MovieRecommendations from "../components/MovieRecommendations";
 import RecommendMovieButton from "../components/RecommendMovieButton";
 import { useMovies } from "../hooks/useMovies";
 import { Movie } from "../types/movie";
-import { Metadata } from "next";
 import GradientText from "../animation/GradientText";
 import CountUp from "../animation/CountUp";
 import RotatingText from "../animation/RotatingText";
@@ -62,70 +61,6 @@ function MoviesContent() {
     setSearchQuery(initialSearchQuery);
   }, [initialSearchQuery]);
 
-  // Filter movies based on selected genres and search query
-  // useEffect(() => {
-  //   if (allMovies.length === 0) return;
-
-  //   let result = allMovies;
-
-  //   // Filter by selected genres
-  //   if (selectedGenres.length > 0) {
-  //     result = result.filter((movie) =>
-  //       selectedGenres.some((genre) => movie.genres.includes(genre))
-  //     );
-  //   }
-
-  //   // Filter by search query
-  //   if (searchQuery) {
-  //     const query = searchQuery.toLowerCase().trim();
-
-  //     // Check for numeric patterns in the search query
-  //     const numericMatch = query.match(/(\d+)/);
-  //     const hasNumericPart = numericMatch !== null;
-
-  //     if (hasNumericPart) {
-  //       const numericValue = parseInt(numericMatch[0]);
-
-  //       // Special case for "movie X" format
-  //       if (query.includes("movie") && numericMatch) {
-  //         const exactIdMatch = result.filter(
-  //           (movie) => movie.id === numericValue
-  //         );
-  //         if (exactIdMatch.length > 0) {
-  //           result = exactIdMatch;
-  //         } else {
-  //           // If no exact match, look for movies with IDs containing the number
-  //           result = result.filter(
-  //             (movie) =>
-  //               movie.id.toString().includes(numericMatch[0]) ||
-  //               movie.title.toLowerCase().includes(query)
-  //           );
-  //         }
-  //       } else {
-  //         // General numeric search
-  //         result = result.filter(
-  //           (movie) =>
-  //             movie.id === numericValue ||
-  //             movie.id.toString().includes(numericMatch[0]) ||
-  //             movie.title.toLowerCase().includes(query) // ||
-  //           // movie.year.includes(numericMatch[0])
-  //         );
-  //       }
-  //     } else {
-  //       // Standard text search
-  //       result = result.filter(
-  //         (movie) =>
-  //           movie.title.toLowerCase().includes(query) ||
-  //           movie.genres.some((genre) => genre.toLowerCase().includes(query))
-  //       );
-  //     }
-  //   }
-
-  //   setFilteredMovies(result);
-  //   setCurrentPage(1); // Reset to first page when filters change
-  // }, [selectedGenres, searchQuery, allMovies]);
-
-
   // In your MoviesContent component, update the useEffect that filters movies:
   useEffect(() => {
     if (allMovies.length === 0) return;
@@ -141,20 +76,12 @@ function MoviesContent() {
 
     // Filter by search query (keep your existing search logic)
     if (searchQuery) {
-      // ... your existing search logic ...
+      const searchTerms = searchQuery.toLowerCase().trim();
+      result = result.filter((movie) => {
+        // Search only in title as a whole phrase
+        return movie.title.toLowerCase().includes(searchTerms);
+      });
     }
-
-    // Sort by points (descending) AND order (ascending) simultaneously
-    // In your sorting logic:
-    result.sort((a, b) => {
-      const pointsDiff = (b.points || 0) - (a.points || 0);
-      if (pointsDiff !== 0) return pointsDiff;
-
-      // Handle undefined orders by treating them as Infinity (will appear last)
-      const orderA = a.order !== undefined ? a.order : Infinity;
-      const orderB = b.order !== undefined ? b.order : Infinity;
-      return orderA - orderB;
-    });
 
     setFilteredMovies(result);
     setCurrentPage(1); // Reset to first page when filters change
@@ -401,7 +328,6 @@ function MoviesContent() {
                   isGridView={true}
                   isActive={activeCardTitle === movie.title}
                   onClick={() => handleCardClick(movie.title)}
-                  order={movie.order} // Pass the order to MovieCard
                 />
               ))}
             </div>

@@ -14,6 +14,11 @@ export function middleware(request: NextRequest) {
     if (!isAuthenticated) {
       // If not authenticated, redirect to login
       const url = new URL('/admin-login', request.url);
+      
+      // Add a query parameter to indicate this is a redirect from middleware
+      // This helps prevent redirect loops
+      url.searchParams.set('from', 'middleware');
+      
       return NextResponse.redirect(url);
     }
     
