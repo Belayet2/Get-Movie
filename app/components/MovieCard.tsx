@@ -9,16 +9,14 @@ interface MovieCardProps {
   isGridView: boolean;
   isActive: boolean;
   onClick: () => void;
-  order?: number;
 }
 
 export default function MovieCard({
   movie,
   isActive,
   onClick,
-  order,
 }: MovieCardProps) {
-  const { title, posterPath, rating, year, genres } = movie;
+  const { title, posterPath, rating, year, genres, views = 0 } = movie;
   const [imageError, setImageError] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -64,11 +62,6 @@ export default function MovieCard({
     if (isMobile) {
       onClick();
     }
-  };
-
-  const handleGetLinks = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = `/movies/${slug}`;
   };
 
   // If not mounted yet (server-side), render a simpler version
@@ -129,7 +122,32 @@ export default function MovieCard({
                 <h3 className="text-xl font-bold text-white truncate">
                   {title}
                 </h3>
-                <p className="text-gray-300 text-sm">{year}</p>
+                <div className="flex justify-between items-center">
+                  <p className="text-gray-300 text-sm">{year}</p>
+                  <p className="text-gray-300 text-sm flex items-center">
+                    <svg 
+                      className="w-4 h-4 mr-1" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+                      />
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" 
+                      />
+                    </svg>
+                    {views.toLocaleString()}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -149,7 +167,32 @@ export default function MovieCard({
                 <h3 className="text-2xl font-bold text-white mb-3 leading-tight">
                   {title}
                 </h3>
-                <p className="text-gray-300 text-lg mb-4">{year}</p>
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-gray-300 text-lg">{year}</p>
+                  <p className="text-gray-300 text-sm flex items-center">
+                    <svg 
+                      className="w-4 h-4 mr-1" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
+                      />
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" 
+                      />
+                    </svg>
+                    {views.toLocaleString()} views
+                  </p>
+                </div>
 
                 {/* Genres */}
                 <div className="flex flex-wrap gap-2 mb-4">

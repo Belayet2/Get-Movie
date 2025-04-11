@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getMovieBySlug } from "../../services/movieService";
+import { getMovieBySlug, incrementMovieViewCount } from "../../services/movieService";
 import { Movie } from "../../types/movie";
 
 // Calculate color based on rating
@@ -83,6 +83,19 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
 
     fetchMovie();
   }, [slug, retryCount]);
+
+  // const handleGetLinks = async (e: React.MouseEvent) => {
+  //   e.preventDefault();
+
+  //   // Increment view count when Get Links button is clicked
+  //   try {
+  //     await incrementMovieViewCount(slug);
+  //   } catch (error) {
+  //     console.error("Error incrementing view count:", error);
+  //   }
+
+  //   // window.location.href = `/movies/${slug}`;
+  // };
 
   if (loading) {
     return (
@@ -236,13 +249,45 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
                         <h3 className="text-xl font-medium text-gray-800 dark:text-white">
                           {site.siteName}
                         </h3>
-                        <a
+                        {/* <Link
+                          onClick={handleGetLinks}
                           href={`${site.siteLink.startsWith("http")
                             ? site.siteLink
                             : `https://${site.siteLink}`
                             }`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                        >
+                          Visit Site
+                          <svg
+                            className="w-4 h-4 ml-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                        </Link> */}
+
+                        <a
+                          href={site.siteLink.startsWith("http") ? site.siteLink : `https://${site.siteLink}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={async (e) => {
+                            console.log("Incrementing view for:", slug);
+                            try {
+                              await incrementMovieViewCount(slug);
+                              console.log("View increment success");
+                            } catch (err) {
+                              console.error("Failed to increment view count", err);
+                            }
+                          }}
                           className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"
                         >
                           Visit Site

@@ -42,6 +42,7 @@ const convertMovie = (doc: QueryDocumentSnapshot<DocumentData>): Movie => {
     siteInfo: data.siteInfo || [],
     status: data.status || 'pending',
     pendingType: data.pendingType || 'admin',
+    views: data.views || 0, // Include views count with default of 0
   };
 };
 
@@ -413,3 +414,38 @@ export async function updateMovieOrder(movieId: string, order: number): Promise<
     throw error;
   }
 }
+
+// Increment view count for a movie
+export const incrementMovieViewCount = async (slug: string): Promise<void> => {
+  try {
+    const moviesCollection = collection(db, 'movies');
+    const querySnapshot = await getDocs(moviesCollection);
+
+    // Find the movie with the matching slug
+    const movieDoc = querySnapshot.docs.find(doc => {
+      const data = doc.data();
+      return createSlug(data.title) === slug;
+    });
+
+    if (!movieDoc) {
+      console.error(`Movie with slug ${slug} not found for view count increment`);
+      return;
+    }
+
+    // Get the document reference
+    const movieRef = doc(db, 'movies', movieDoc.id);
+    
+    // Increment the views field (or initialize to 1 if it doesn't exist)
+    await updateDoc(movieRef, {
+      views: increment(1)
+    });
+    
+    // Clear cache to ensure fresh data on next fetch
+    clearMoviesCache();
+    
+    console.log(`View count incremented for movie: ${slug}`);
+  } catch (error) {
+    console.error(`Error incrementing view count for movie ${slug}:`, error);
+    throw error;
+  }
+};

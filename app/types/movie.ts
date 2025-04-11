@@ -14,6 +14,7 @@ export interface Movie {
   status?: 'live' | 'pending';
   pendingType?: 'admin' | 'user';
   key?: string; // New field for movie key
+  views?: number; // Track number of views
 }
 
 // Interface for site information
