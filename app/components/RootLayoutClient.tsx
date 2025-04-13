@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import MovieAcceptedNotification from "./MovieAcceptedNotification";
 import { AuthProvider } from "../firebase/AuthContext";
+import { ThemeProvider } from "../context/ThemeContext";
 
 export default function RootLayoutClient({
   children,
@@ -18,19 +20,24 @@ export default function RootLayoutClient({
 
   if (!mounted) {
     return (
-      <>
-        <Navbar />
-        {children}
-        <Footer />
-      </>
+      <ThemeProvider>
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
+      </ThemeProvider>
     );
   }
 
   return (
-    <AuthProvider>
-      <Navbar />
-      {children}
-      <Footer />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Navbar />
+        {children}
+        <Footer />
+        <MovieAcceptedNotification />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

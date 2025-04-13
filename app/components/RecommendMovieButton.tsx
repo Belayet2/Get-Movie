@@ -67,22 +67,25 @@ export default function RecommendMovieButton({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full my-3">
+      <div className="mb-2 text-center text-sm text-gray-600 dark:text-gray-300">
+        <span className="font-medium">Can't find "{searchQuery}"?</span> We'll add it to our collection!
+      </div>
       <button
         onClick={handleRecommendMovie}
         disabled={isRecommending}
-        className={`w-full py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200
+        className={`w-full py-3 px-6 rounded-lg font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5
           ${
             isRecommending
               ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-              : "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800/50"
+              : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 dark:from-indigo-600 dark:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800"
           }
         `}
       >
         {isRecommending ? (
           <span className="flex items-center justify-center">
             <svg
-              className="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-500"
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -101,28 +104,29 @@ export default function RecommendMovieButton({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Processing...
+            Adding to our collection...
           </span>
         ) : (
           <span className="flex items-center justify-center">
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            <svg 
+              className="w-5 h-5 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              <path 
+                fillRule="evenodd" 
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" 
+                clipRule="evenodd"
               />
             </svg>
-            Recommend Us This Movie "{searchQuery}"
+            Recommend "{searchQuery}" to Our Collection
           </span>
         )}
       </button>
+      <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
+        Help us grow our movie database! Your recommendations matter.
+      </div>
     </div>
   );
 }

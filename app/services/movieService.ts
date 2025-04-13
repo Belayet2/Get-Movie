@@ -15,6 +15,7 @@ import {
   QueryDocumentSnapshot,
   setDoc,
   increment,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { Movie, SiteInfo } from '../types/movie';
@@ -418,6 +419,7 @@ export async function updateMovieOrder(movieId: string, order: number): Promise<
 // Increment view count for a movie
 export const incrementMovieViewCount = async (slug: string): Promise<void> => {
   try {
+    // Find the movie by slug
     const moviesCollection = collection(db, 'movies');
     const querySnapshot = await getDocs(moviesCollection);
 
@@ -428,24 +430,82 @@ export const incrementMovieViewCount = async (slug: string): Promise<void> => {
     });
 
     if (!movieDoc) {
-      console.error(`Movie with slug ${slug} not found for view count increment`);
+      console.log(`No movie found with slug ${slug}`);
       return;
     }
 
-    // Get the document reference
     const movieRef = doc(db, 'movies', movieDoc.id);
-    
-    // Increment the views field (or initialize to 1 if it doesn't exist)
+
+    // Update the view count
     await updateDoc(movieRef, {
-      views: increment(1)
+      views: increment(1),
+      updatedAt: serverTimestamp()
     });
+
+    // Clear the cache to ensure fresh data is fetched next time
+    clearMoviesCache();
+
+    console.log(`View count incremented for movie with slug ${slug}`);
+  } catch (error) {
+    console.error(`Error incrementing view count for movie with slug ${slug}:`, error);
+    // Don't throw the error to avoid breaking the page if view counting fails
+  }
+};
+
+// Accept all pending movies from admin
+export const acceptAllPendingMovies = async (adminKey: string, pendingType: 'admin' | 'user' = 'admin'): Promise<{success: boolean; message: string; count: number}> => {
+  try {
+    // Verify admin key
+    const adminDoc = await getDoc(doc(db, 'admin', 'admin_credentials'));
+    if (!adminDoc.exists()) {
+      return { success: false, message: 'Admin credentials not found', count: 0 };
+    }
     
-    // Clear cache to ensure fresh data on next fetch
+    const adminData = adminDoc.data();
+    if (adminKey !== adminData.key) {
+      return { success: false, message: 'Invalid admin key', count: 0 };
+    }
+
+    // Get all pending movies of the specified type
+    const moviesCollection = collection(db, 'movies');
+    const q = query(
+      moviesCollection, 
+      where('status', '==', 'pending'),
+      where('pendingType', '==', pendingType)
+    );
+    const pendingMoviesSnapshot = await getDocs(q);
+    
+    if (pendingMoviesSnapshot.empty) {
+      return { success: true, message: 'No pending movies found', count: 0 };
+    }
+
+    // Update all pending movies to live status
+    // Use writeBatch from firebase/firestore instead of db.batch()
+    const batch = writeBatch(db);
+    pendingMoviesSnapshot.docs.forEach((doc) => {
+      const movieRef = doc.ref;
+      batch.update(movieRef, {
+        status: 'live',
+        updatedAt: serverTimestamp()
+      });
+    });
+
+    await batch.commit();
+    
+    // Clear the cache to ensure fresh data is fetched next time
     clearMoviesCache();
     
-    console.log(`View count incremented for movie: ${slug}`);
+    return { 
+      success: true, 
+      message: `Successfully approved ${pendingMoviesSnapshot.size} movies`, 
+      count: pendingMoviesSnapshot.size 
+    };
   } catch (error) {
-    console.error(`Error incrementing view count for movie ${slug}:`, error);
-    throw error;
+    console.error('Error accepting all pending movies:', error);
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Failed to accept pending movies', 
+      count: 0 
+    };
   }
 };

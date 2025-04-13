@@ -6,7 +6,8 @@ import AdminNavbar from "@/app/components/AdminNavbar";
 import { addMovie } from "@/app/services/movieService";
 import { SiteInfo } from "@/app/types/movie";
 
-const RAPIDAPI_KEY = "a0eeb53363mshc82648026a9e3d6p17737cjsn8dc24637a7f3";
+// You need to provide your own RapidAPI key for IMDb API
+const RAPIDAPI_KEY = process.env.NEXT_PUBLIC_RAPIDAPI_KEY || "";
 const IMDB_TITLE_URL = "https://imdb8.p.rapidapi.com/title/get-details";
 const IMDB_RATING_URL = "https://imdb8.p.rapidapi.com/title/get-ratings";
 const IMDB_GENRE_URL = "https://imdb8.p.rapidapi.com/title/get-genres";
@@ -50,6 +51,15 @@ export default function AddMovieClient() {
 
   const fetchMovieDetails = async (imdbId: string) => {
     try {
+      // Check if API key is available
+      if (!RAPIDAPI_KEY) {
+        setError("RapidAPI key is missing. Please add your NEXT_PUBLIC_RAPIDAPI_KEY to your environment variables.");
+        return;
+      }
+
+      // Show loading state
+      setLoading(true);
+      
       const [titleResponse, ratingResponse, genresResponse] = await Promise.all([
         fetch(`${IMDB_TITLE_URL}?tconst=${imdbId}`, {
           method: "GET",
@@ -81,10 +91,16 @@ export default function AddMovieClient() {
       setTitle(titleData.title || "");
       setYear(titleData.year || "");
       setPosterPath(titleData.image?.url || "");
-      setRating(ratingData.rating || "N/A");
-      setGenres(genresData || []);
+      // Convert rating to string for display, but ensure it's empty string if not a number
+      const ratingValue = ratingData?.rating ? String(ratingData.rating) : "";
+      setRating(ratingValue);
+      // Ensure genresData is an array before setting it to state
+      setGenres(Array.isArray(genresData) ? genresData : []);
     } catch (error) {
       console.error("Error fetching movie details from IMDb API:", error);
+      setError("Failed to fetch movie details. Please check your API key and try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

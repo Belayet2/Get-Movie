@@ -96,6 +96,7 @@ export default function ManageMoviesClient() {
     router.push(`/admin-control-panel/edit-movie/${movie.slug}`);
   };
 
+  // New function to handle accepting user-recommended movies
   const handleAcceptUserMovie = async (movie: Movie) => {
     if (!movie.firestoreId) {
       console.error("Movie has no Firestore ID");
@@ -435,12 +436,6 @@ export default function ManageMoviesClient() {
 
                             <div className="flex flex-wrap justify-end gap-2 mt-4">
                               <button
-                                onClick={() => handleAcceptUserMovie(movie)}
-                                className="px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm"
-                              >
-                                Accept
-                              </button>
-                              <button
                                 onClick={() => handleEditMovie(movie)}
                                 className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm"
                               >
@@ -521,6 +516,7 @@ export default function ManageMoviesClient() {
                             </div>
 
                             <div className="flex flex-wrap justify-end gap-2 mt-4">
+                              {/* New Accept button for user pending movies */}
                               <button
                                 onClick={() => handleAcceptUserMovie(movie)}
                                 className="px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm"

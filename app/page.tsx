@@ -25,18 +25,18 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <section className="bg-gradient-to-r from-indigo-800 to-purple-900 dark:from-gray-800 dark:to-gray-900 dark:border-b dark:border-purple-900 text-white">
         <div className="container mx-auto px-4 py-12 sm:py-16 md:py-24">
           <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-300 dark:to-purple-300">
               Get Your Favorite Movie Fast
             </h1>
-            <p className="text-lg sm:text-xl mb-8 text-blue-100">
+            <p className="text-lg sm:text-xl mb-8 text-blue-100 dark:text-blue-200">
               Find, Watch, and Enjoy the Best Movies with Get Movie!
             </p>
             <Link
               href="/movies"
-              className="inline-block bg-white text-blue-600 font-medium px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors duration-150 transform hover:scale-105 active:scale-95 shadow-sm hover:shadow"
+              className="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 text-white font-medium px-6 py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800 transition-all duration-150 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
             >
               Browse All Movies
             </Link>
@@ -142,7 +142,7 @@ export default function Home() {
             </p>
             <Link
               href="/movies"
-              className="inline-block bg-blue-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-150 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+              className="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 text-white font-medium px-6 py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800 transition-all duration-150 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
             >
               Explore All Movies
             </Link>

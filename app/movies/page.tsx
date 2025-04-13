@@ -192,15 +192,15 @@ function MoviesContent() {
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-              <GradientText colors={["#4079ff, #40ffaa, #4079ff"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={allMovies.length} separator="," direction="up" duration={1} className="count-up-text" /> Movies Collected</GradientText>
+            <span className="bg-clip-text text-transparent">
+              <GradientText colors={["#4F46E5, #9333EA, #4F46E5"]} animationSpeed={2.5} showBorder={false} className="custom-class">Total <CountUp from={0} to={allMovies.length} separator="," direction="up" duration={1} className="count-up-text" /> Movies Collected</GradientText>
             </span>
           </h1>
           <div className="text-xs sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             <div className="flex justify-center items-center text-gray-700 dark:text-white">
               <p className="text-center">
                 Love{" "}
-                <span className="inline-flex items-center justify-center px-3 bg-blue-200 text-black py-0.5 sm:py-0.5 md:py-1 rounded-lg">
+                <span className="inline-flex items-center justify-center px-3 bg-indigo-200 dark:bg-indigo-900 text-black dark:text-white py-0.5 sm:py-0.5 md:py-1 rounded-lg">
                   <RotatingText
                     texts={["Action", "Adventure", "Animation", "Biographical", "Comedy", "Crime", "Historical", "Horror", "Romantic", "Sci-fi", "Science Fiction", "Thriller", "Young Adult"]}
                     staggerFrom="last"
@@ -220,7 +220,7 @@ function MoviesContent() {
         </div>
 
         {/* Search and Filter Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-5 border border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-5 border border-gray-100 dark:border-gray-700 backdrop-blur-sm dark:shadow-purple-900/10">
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             {/* Search Input */}
             <div className="flex-1 relative" ref={searchInputRef}>
@@ -341,7 +341,7 @@ function MoviesContent() {
                       key={number}
                       onClick={() => paginate(number)}
                       className={`px-4 py-2 rounded-lg transition-colors ${currentPage === number
-                        ? "bg-indigo-600 text-white"
+                        ? "bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 text-white"
                         : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                         }`}
                     >

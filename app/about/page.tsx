@@ -28,11 +28,11 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <div className="bg-gradient-to-r from-indigo-800 to-purple-900 dark:from-gray-800 dark:to-gray-900 dark:border-b dark:border-purple-900 text-white">
         <div className="container mx-auto px-4 py-12 md:py-24">
           <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">About Getmovie</h1>
-            <p className="text-lg sm:text-xl mb-8 text-blue-100">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-purple-200 dark:from-blue-300 dark:to-purple-300">About Getmovie</h1>
+            <p className="text-lg sm:text-xl mb-8 text-blue-100 dark:text-blue-200">
               Learn more about our mission to bring the best movie experience to you.
             </p>
           </div>
@@ -124,7 +124,7 @@ export default function AboutPage() {
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 ></textarea>
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors">
+              <button type="submit" className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg hover:from-indigo-600 hover:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800 transition-all duration-200 shadow-md hover:shadow-lg">
                 Send Message
               </button>
             </div>
