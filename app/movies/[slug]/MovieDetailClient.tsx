@@ -20,16 +20,10 @@ if (typeof window !== "undefined") {
     "error",
     function (event) {
       if (event.target && "src" in event.target && event.target.src) {
-        console.error("Resource failed to load:", event.target.src);
       }
     },
     true
   );
-
-  // Add a global unhandled rejection handler
-  window.addEventListener("unhandledrejection", function (event) {
-    console.error("Unhandled promise rejection:", event.reason);
-  });
 }
 
 export default function MovieDetailClient({ slug }: { slug: string }) {
@@ -67,7 +61,6 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
           }
         }
       } catch (err) {
-        console.error("Error fetching movie:", err);
         setError("Error loading movie details");
         if (retryCount < 3 && window.location.hostname !== "localhost") {
           setRetryCount((prev) => prev + 1);
@@ -83,19 +76,6 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
 
     fetchMovie();
   }, [slug, retryCount]);
-
-  // const handleGetLinks = async (e: React.MouseEvent) => {
-  //   e.preventDefault();
-
-  //   // Increment view count when Get Links button is clicked
-  //   try {
-  //     await incrementMovieViewCount(slug);
-  //   } catch (error) {
-  //     console.error("Error incrementing view count:", error);
-  //   }
-
-  //   // window.location.href = `/movies/${slug}`;
-  // };
 
   if (loading) {
     return (
@@ -280,12 +260,9 @@ export default function MovieDetailClient({ slug }: { slug: string }) {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={async (e) => {
-                            console.log("Incrementing view for:", slug);
                             try {
                               await incrementMovieViewCount(slug);
-                              console.log("View increment success");
                             } catch (err) {
-                              console.error("Failed to increment view count", err);
                             }
                           }}
                           className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium"

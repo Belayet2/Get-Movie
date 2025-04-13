@@ -25,7 +25,6 @@ export default function VisitSiteButton({
       .then(() => {
       })
       .catch((err) => {
-        console.error("View count increment failed", err);
       });
   };
 

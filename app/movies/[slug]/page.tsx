@@ -21,7 +21,6 @@ export async function generateStaticParams() {
       .filter((slug) => slug && slug.trim() !== "")
       .map((slug) => ({ slug }));
   } catch (error) {
-    console.error("Error generating static params:", error);
     // Fallback to include at least "the-wild-robot"
     return [{ slug: "the-wild-robot" }];
   }
@@ -73,7 +72,6 @@ export async function generateMetadata({
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
     return {
       title: "Movie Details - Getmovie",
     };
@@ -232,7 +230,6 @@ export default async function MovieDetailPage({
       );
     }
   } catch (error) {
-    console.error("Error fetching movie:", error);
   }
 
   // If movie is not found or there's an error, use the client component as fallback
