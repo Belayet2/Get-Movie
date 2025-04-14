@@ -1,7 +1,8 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getMovieBySlug, getAllMovieSlugs, incrementMovieViewCount } from "../../services/movieService";
+import Script from "next/script";
+import { getMovieBySlug, getAllMovieSlugs, incrementMovieViewCount, getRelatedMovies } from "../../services/movieService";
 import { Movie } from "../../types/movie";
 import MovieDetailClient from "./MovieDetailClient";
 import VisitSiteButton from "./VisitSiteButton";
@@ -86,6 +87,53 @@ const getRatingColor = (rating: number) => {
   return "bg-red-500";
 };
 
+// Related Movies Component
+async function RelatedMovies({ movieId, genres }: { movieId: number, genres: string[] }) {
+  try {
+    const relatedMovies = await getRelatedMovies(movieId, genres, 4);
+    
+    if (!relatedMovies || relatedMovies.length === 0) {
+      return null;
+    }
+    
+    return (
+      <div className="mt-12 mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray mb-6">
+          Related Movies
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {relatedMovies.map((movie) => (
+            <Link 
+              href={`/movies/${movie.slug}`} 
+              key={movie.id}
+              className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+            >
+              <div className="relative h-64 w-full">
+                <Image
+                  src={movie.posterPath || "/images/placeholders/default-movie.jpg"}
+                  alt={movie.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-gray-800 dark:text-white text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {movie.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">{movie.year}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error("Error fetching related movies:", error);
+    return null;
+  }
+}
+
 export default async function MovieDetailPage({
   params,
 }: {
@@ -120,26 +168,35 @@ export default async function MovieDetailPage({
     if (movie) {
       return (
         <div className="container mx-auto px-4 py-8">
-          <Link
-            href="/movies"
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline mb-6"
-          >
-            <svg
-              className="w-5 h-5 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Back to Movies
-          </Link>
+          {/* Breadcrumbs navigation */}
+          <nav className="flex mb-6" aria-label="Breadcrumb">
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link href="/" className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                  <svg className="w-3 h-3 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                  </svg>
+                  Home
+                </Link>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <svg className="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
+                  </svg>
+                  <Link href="/movies" className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-blue-400">Movies</Link>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <svg className="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
+                  </svg>
+                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400 truncate max-w-[200px]">{movie.title}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
 
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
             <div className="md:flex">
@@ -226,12 +283,56 @@ export default async function MovieDetailPage({
               </div>
             </div>
           </div>
+
+          {/* Related Movies Section */}
+          <RelatedMovies movieId={movie.id} genres={movie.genres} />
+
+          {/* Client component for handling view count and dynamic content */}
+          <MovieDetailClient movie={movie} />
+
+          {/* Schema.org structured data */}
+          <Script
+            id="movie-structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Movie",
+                "name": movie.title,
+                "dateCreated": movie.year,
+                "description": `Watch ${movie.title} (${movie.year}) online. Get details, ratings, and streaming information.`,
+                "director": movie.director ? {
+                  "@type": "Person",
+                  "name": movie.director
+                } : undefined,
+                "genre": movie.genres,
+                "image": movie.posterPath || "https://getmoviefast.netlify.app/images/logo/movie-logo.png",
+                "url": `https://getmoviefast.netlify.app/movies/${movie.slug}`,
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": movie.rating.toString(),
+                  "bestRating": "10",
+                  "worstRating": "1",
+                  "ratingCount": movie.views || 1
+                }
+              })
+            }}
+          />
         </div>
       );
     }
   } catch (error) {
   }
 
-  // If movie is not found or there's an error, use the client component as fallback
-  return <MovieDetailClient slug={params.slug} />;
+  // If movie is not found or there's an error, create a minimal movie object for the fallback
+  const fallbackMovie: Movie = {
+    id: 0,
+    title: 'Movie Not Found',
+    posterPath: '/images/placeholders/default-movie.jpg',
+    rating: 0,
+    year: '',
+    genres: [],
+    slug: params.slug
+  };
+  return <MovieDetailClient movie={fallbackMovie} />;
 }

@@ -419,36 +419,70 @@ export async function updateMovieOrder(movieId: string, order: number): Promise<
 // Increment view count for a movie
 export const incrementMovieViewCount = async (slug: string): Promise<void> => {
   try {
-    // Find the movie by slug
-    const moviesCollection = collection(db, 'movies');
-    const querySnapshot = await getDocs(moviesCollection);
-
-    // Find the movie with the matching slug
-    const movieDoc = querySnapshot.docs.find(doc => {
-      const data = doc.data();
-      return createSlug(data.title) === slug;
-    });
-
-    if (!movieDoc) {
-      console.log(`No movie found with slug ${slug}`);
+    // Get the movie by slug
+    const movie = await getMovieBySlug(slug);
+    if (!movie || !movie.firestoreId) {
+      console.error(`Movie with slug ${slug} not found`);
       return;
     }
 
-    const movieRef = doc(db, 'movies', movieDoc.id);
+    // Reference to the movie document
+    const movieRef = doc(db, 'movies', movie.firestoreId);
 
     // Update the view count
     await updateDoc(movieRef, {
       views: increment(1),
-      updatedAt: serverTimestamp()
+      viewCount: increment(1), // Add this field for compatibility
+      lastViewed: serverTimestamp(),
     });
 
-    // Clear the cache to ensure fresh data is fetched next time
+    // Clear cache to ensure fresh data on next fetch
     clearMoviesCache();
 
-    console.log(`View count incremented for movie with slug ${slug}`);
+    console.log(`View count incremented for ${slug}`);
   } catch (error) {
-    console.error(`Error incrementing view count for movie with slug ${slug}:`, error);
-    // Don't throw the error to avoid breaking the page if view counting fails
+    console.error(`Error incrementing view count for ${slug}:`, error);
+    // Don't throw the error to prevent breaking the page load
+    // Just log it and continue
+  }
+};
+
+// Get related movies based on genres
+export const getRelatedMovies = async (
+  movieId: number,
+  genres: string[],
+  limit: number = 4
+): Promise<Movie[]> => {
+  try {
+    // Get all movies
+    const allMovies = await getAllMovies();
+    
+    // Filter out the current movie
+    const otherMovies = allMovies.filter(movie => movie.id !== Number(movieId));
+    
+    // Score each movie based on genre overlap
+    const scoredMovies = otherMovies.map(movie => {
+      // Count how many genres match
+      const matchingGenres = movie.genres.filter(genre => 
+        genres.includes(genre)
+      ).length;
+      
+      return {
+        movie,
+        score: matchingGenres
+      };
+    });
+    
+    // Sort by score (highest first) and take the requested number
+    const relatedMovies = scoredMovies
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(item => item.movie);
+    
+    return relatedMovies;
+  } catch (error) {
+    console.error('Error getting related movies:', error);
+    return [];
   }
 };
 

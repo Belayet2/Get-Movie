@@ -237,65 +237,116 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Dark Mode Toggle - Desktop */}
-            <div className="mr-4">
-              <button
-                onClick={toggleTheme}
-                className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                aria-label="Toggle dark mode"
-              >
-                {isDarkMode ? (
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-            
-            {/* Desktop Search */}
-            <div className="relative z-30" ref={searchInputRef}>
-              {showSearch ? (
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search movies..."
-                    className={`w-80 pl-10 pr-10 py-2 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
+            <div className="flex items-center space-x-6">
+              {/* Desktop Search */}
+              <div className="relative z-30" ref={searchInputRef}>
+                {showSearch ? (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search movies..."
+                      className={`w-80 pl-10 pr-10 py-2 border-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white
                       ${isFocused
-                        ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
-                        : "border-gray-200 dark:border-gray-700"
-                      }`}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onFocus={() => {
-                      setShowRecommendations(true);
-                      setIsFocused(true);
-                    }}
-                    autoFocus
-                  />
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg
-                      className={`w-5 h-5 ${isFocused ? "text-blue-500" : "text-gray-400"
+                          ? "border-blue-500 shadow-lg dark:border-blue-400 ring-4 ring-blue-100 dark:ring-blue-900/30"
+                          : "border-gray-200 dark:border-gray-700"
                         }`}
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onFocus={() => {
+                        setShowRecommendations(true);
+                        setIsFocused(true);
+                      }}
+                      autoFocus
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className={`w-5 h-5 ${isFocused ? "text-blue-500" : "text-gray-400"
+                          }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                      {searchQuery ? (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowSearch(false)}
+                          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Movie Recommendations */}
+                    {showRecommendations && !isLoading && (
+                      <div className="absolute mt-2 w-[550px] right-0 transform-gpu transition-all duration-200 ease-in-out">
+                        {searchQuery.trim().length > 0 && !isLoading && (
+                          <div className="mt-3">
+                            <RecommendMovieButton
+                              searchQuery={searchQuery}
+                              movies={allMovies}
+                            />
+                          </div>
+                        )}
+                        <MovieRecommendations
+                          searchQuery={searchQuery}
+                          movies={movies}
+                          onSelectMovie={handleSelectMovie}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowSearch(true)}
+                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
+                    aria-label="Search"
+                  >
+                    <svg
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -308,94 +359,45 @@ export default function Navbar() {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
-                  </div>
+                    <span className="ml-1 text-sm hidden sm:inline">Search</span>
+                  </button>
+                )}
+              </div>
 
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    {searchQuery ? (
-                      <button
-                        onClick={() => setSearchQuery("")}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setShowSearch(false)}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Movie Recommendations */}
-                  {showRecommendations && !isLoading && (
-                    <div className="absolute mt-2 w-[550px] right-0 transform-gpu transition-all duration-200 ease-in-out">
-                      {searchQuery.trim().length > 0 && !isLoading && (
-                        <div className="mt-3">
-                          <RecommendMovieButton
-                            searchQuery={searchQuery}
-                            movies={allMovies}
-                          />
-                        </div>
-                      )}
-                      <MovieRecommendations
-                        searchQuery={searchQuery}
-                        movies={movies}
-                        onSelectMovie={handleSelectMovie}
-                      />
-                    </div>
-                  )}
-                </div>
-              ) : (
+              {/* Dark Mode Toggle - Desktop */}
+              <div className="mr-4">
                 <button
-                  onClick={() => setShowSearch(true)}
-                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
-                  aria-label="Search"
+                  onClick={toggleTheme}
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  aria-label="Toggle dark mode"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                  <span className="ml-1 text-sm hidden sm:inline">Search</span>
+                  {isDarkMode ? (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                      />
+                    </svg>
+                  )}
                 </button>
-              )}
+              </div>
             </div>
           </div>
 
@@ -433,7 +435,7 @@ export default function Navbar() {
                 </svg>
               )}
             </button>
-            
+
             {/* Mobile Menu Button */}
             <button
               className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
@@ -574,7 +576,7 @@ export default function Navbar() {
                   </div>
                 </button>
               </div>
-              
+
               <Link
                 href="/"
                 className={`${isActive("/")

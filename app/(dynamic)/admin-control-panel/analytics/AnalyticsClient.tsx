@@ -69,7 +69,7 @@ export default function AnalyticsClient() {
 
       // Get top 5 most viewed movies
       const sortedMovies = [...moviesData].sort((a, b) => (b.views || 0) - (a.views || 0));
-      setTopMovies(sortedMovies.slice(0, 5));
+      setTopMovies(sortedMovies.slice(0, 500));
 
       // Calculate views by genre
       const genreData: {[key: string]: number} = {};
@@ -277,6 +277,16 @@ export default function AnalyticsClient() {
             </div>
           </div>
 
+          {/* Refresh Button */}
+          <div className="flex justify-end">
+            <button
+              onClick={fetchMovieData}
+              className="px-4 py-2 mb-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+              Refresh Data
+            </button>
+          </div>
+
           {/* Top Movies Table */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 5 Most Viewed Movies</h2>
@@ -331,16 +341,6 @@ export default function AnalyticsClient() {
                 </tbody>
               </table>
             </div>
-          </div>
-
-          {/* Refresh Button */}
-          <div className="flex justify-end">
-            <button
-              onClick={fetchMovieData}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            >
-              Refresh Data
-            </button>
           </div>
         </div>
       </div>
